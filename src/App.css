@@ -6,7 +6,7 @@
 
 body {
   min-height: 100vh;
-  background-color: #ececec !important;
+  background-color: #e1ebf5 !important;
   position: relative;
   padding-bottom: 3rem;
 }
@@ -46,6 +46,16 @@ p {
   max-width: 1440px !important;
   width: 92% !important;
   margin: 0 auto;
+}
+
+.page-content {
+  width: 100%;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 0.75rem;
+  margin-top: 30px;
+  min-height: 250px;
+  box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
 }
 
 .overflow-content {
@@ -182,6 +192,14 @@ input[type="radio"].radio-secondary:focus + label{
 input[type="checkbox"].checkbox-primary:checked {
   background-color: var(--color-secondary) !important;
   border-color: var(--color-secondary) !important;
+}
+
+@media all and (max-width: 991px) {
+  .page__container {
+    padding: 1rem !important;
+    margin: 0 auto;
+    width: 98% !important;
+  }
 }
 
 @media all and (max-width: 767px) {

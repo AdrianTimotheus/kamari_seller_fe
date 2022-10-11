@@ -1,0 +1,252 @@
+.page-background {
+  background-color: var(--primary);
+  width: 100%;
+  height: 13.5vw;
+  min-height: 240px;
+  z-index: -1;
+  position: absolute;
+}
+
+.main-layout {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  color: white;
+}
+
+.header > img {
+  height: 40px;
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  background-color: rgba(0,0,0,0.1);
+  border-radius: 1000px;
+}
+
+.header-user > img {
+  width: 35px;
+  object-fit: cover;
+  aspect-ratio : 1 / 1;
+  border-radius: 1000px;
+  padding: 0.2rem;
+}
+
+.header-user > span {
+  padding: 0px 0.8rem 0px 0.3rem;
+  font-size: 0.9rem;
+  color: white;
+}
+
+.header-control {
+  display: none;
+}
+
+.header-control > button {
+  padding: 0px;
+  border: 0px;
+  background: none;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.main {
+  padding-left: 1.5rem;
+  width: 80%;
+}
+
+.sidebar {
+  width: 20%;
+  padding-right: 1.5rem;
+}
+
+.sidebar-hide {
+  display: none;
+}
+
+.sidebar-logo {
+  margin-bottom: 90px;
+}
+
+.sidebar-logo > img {
+  width: 100%;
+}
+
+.sidebar-control {
+  display: none;
+}
+.sidebar-control > button {
+  padding: 0px;
+  border: 0px;
+  background: none;
+  color: var(--grey2);
+  font-size: 1.5rem;
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes toActive {
+  from {
+    width: 45%;
+    height: 120px;
+  }
+  to {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.sidebar-menu > .active {
+  background-color: rgba(255,255,255,0.5);
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  justify-content: flex-start;
+  padding: 1rem;
+  width: 100%;
+  height: auto;
+  animation: toActive 0.5s;
+}
+
+.sidebar-menu > .active > span {
+  color: var(--secondary);
+}
+
+.sidebar-menu > .active > i {
+  color: var(--secondary);
+  font-size: 1.8rem;
+}
+
+.sidebar-menu > div {
+  width: 45%;
+  height: 120px;
+  border-radius: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.2rem;
+  color: rgba(0,0,0,0.5);
+}
+
+.sidebar-menu > div > i {
+  font-size: 2.1rem;
+}
+
+.sidebar-menu > div > span {
+  font-size: 1rem;
+}
+
+.sidebar-overlay {
+  display: none;
+}
+
+@media all and (max-width: 1199px) {
+  .main {
+    width: 70%;
+  }
+  .sidebar {
+    width: 30%;
+  }
+  .sidebar-menu {
+    gap: 0.7rem;
+  }
+}
+
+@media all and (max-width: 767px) {
+  .main {
+    padding: 0px;
+    width: 885px;
+  }
+  .header {
+    justify-content: space-between;
+  }
+  .header-control {
+    display: block;
+  }
+  .sidebar-float > .sidebar-content {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: white;
+    width: 90%;
+    padding: 1rem;
+    height: 100%;
+    z-index: 101;
+  }
+  .sidebar-float > .sidebar-overlay {
+    display: block;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 100;
+  }
+  .sidebar-logo {
+    display: none;
+  }
+  .sidebar-control {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+  }
+  .sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 1rem;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    height: 90%;
+  }
+  .sidebar-menu > .active {
+    padding: 0px;
+  }
+  .sidebar-menu > .active > i {
+    font-size: 1.2rem;
+  }
+  .sidebar-menu > div {
+    width: 100%;
+    height: auto;
+    border-radius: 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.2rem;
+    color: rgba(0,0,0,0.5);
+  }
+  
+  .sidebar-menu > div > i {
+    font-size: 1.2rem;
+  }
+  
+  .sidebar-menu > div > span {
+    font-size: 1rem;
+  }
+}

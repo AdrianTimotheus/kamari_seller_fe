@@ -1,7 +1,29 @@
-export default function Header() {
+import { Dispatch, SetStateAction } from 'react';
+import UserCard from '../../components/Card/UserCard';
+
+type props = {
+  showSidebar: boolean,
+  setShowSidebar: Dispatch<SetStateAction<boolean>>,
+}
+
+export default function Header({ showSidebar, setShowSidebar }:props) {
+  const handleControl = () => {
+    if (showSidebar) setShowSidebar(false);
+    else setShowSidebar(true);
+  };
   return (
-    <div>
-      <span>Header</span>
-    </div>
+    <header className="header">
+      <div className="header-control">
+        <button
+          type="button"
+          onClick={() => handleControl()}
+        >
+          <i className="bi bi-list" />
+        </button>
+      </div>
+      <div>
+        <UserCard />
+      </div>
+    </header>
   );
 }

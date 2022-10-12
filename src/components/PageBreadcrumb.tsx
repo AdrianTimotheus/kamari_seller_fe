@@ -4,7 +4,7 @@ type props = {
 }
 export default function PageBreadcrumb({ main, sub }:props) {
   return (
-    <div className="text-white d-flex flex-row gap-2">
+    <div className="breadcrumb">
       <span>{main}</span>
       <span>&#62;</span>
       <span>{sub}</span>

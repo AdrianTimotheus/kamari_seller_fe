@@ -1,8 +1,7 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/no-array-index-key */
 import { useMediaQuery } from '@mui/material';
 import { Dispatch, SetStateAction, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import KamariSeller from '../../assets/png/Kamari-Seller.png';
 
 type props = {
@@ -16,68 +15,63 @@ export default function Sidebar({ showSidebar, setShowSidebar }:props) {
   const menu = [
     {
       text: 'Dashboard',
-      url: '',
       icon: 'bi-house',
-      childern: [
+      children: [
         {
           text: 'Dashboard',
-          url: '',
+          url: '/dashboard',
         },
       ],
     },
     {
       text: 'Produk',
-      url: '',
       icon: 'bi-bag',
       children: [
         {
           text: 'Produk Saya',
-          url: '',
+          url: '/myproduct/all',
         },
         {
           text: 'Tambah Produk',
-          url: '',
+          url: '/myproduct/new',
         },
       ],
     },
     {
       text: 'Voucher',
-      url: '',
       icon: 'bi-tag',
       children: [
         {
           text: 'Voucher Saya',
-          url: '',
+          url: '/myvoucher/all',
         },
         {
           text: 'Tambah Voucher',
-          url: '',
+          url: '/myvoucher/new',
         },
       ],
     },
     {
       text: 'Promosi',
-      url: '',
       icon: 'bi-megaphone',
       children: [
         {
           text: 'Promosi Saya',
-          url: '',
+          url: '/mypromotion/all',
         },
         {
           text: 'Tambah Promosi',
-          url: '',
+          url: '/mypromotion/new',
         },
       ],
     },
     {
       text: 'Pengiriman',
-      url: '',
       icon: 'bi-box-seam',
       children: [
         {
           text: 'Semua Pengiriman',
-          url: '',
+          url: '/shipment',
         },
       ],
     },
@@ -106,13 +100,29 @@ export default function Sidebar({ showSidebar, setShowSidebar }:props) {
         </div>
         <div className="sidebar-menu">
           {menu.map((item, index) => (
-            <div
-              key={`menu-${index}`}
-              className={`${selectedIndex === index ? 'active' : ''}`}
-              onClick={() => setSelectedIndex(index)}
-            >
-              <i className={`bi ${item.icon}`} />
-              <span>{item.text}</span>
+            <div>
+              <button
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target={`#collapseMenu${index}`}
+                aria-expanded="false"
+                aria-controls={`collapseMenu${index}`}
+                key={`menu-${index}`}
+                className={`sidebar-menu-item ${selectedIndex === index ? 'active' : ''}`}
+                onClick={() => setSelectedIndex(index)}
+              >
+                <div><i className={`bi ${item.icon}`} /></div>
+                <div><span>{item.text}</span></div>
+              </button>
+              <div className="collapse sidebar-menu-item-child" id={`collapseMenu${index}`}>
+                {item.children.map((child) => (
+                  <NavLink
+                    to={child.url}
+                  >
+                    {child.text}
+                  </NavLink>
+                ))}
+              </div>
             </div>
           ))}
         </div>

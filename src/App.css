@@ -48,6 +48,12 @@ p {
   margin: 0 auto;
 }
 
+.page-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
 .page-content {
   width: 100%;
   padding: 1rem;
@@ -55,7 +61,7 @@ p {
   border-radius: 0.75rem;
   margin-top: 30px;
   min-height: 250px;
-  box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+  box-shadow: 0 0.75rem 1.5rem rgb(18 38 63 / 3%)
 }
 
 .overflow-content {
@@ -74,6 +80,13 @@ p {
   box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
   padding: 1.5rem;
   width: 100%;
+}
+
+.breadcrumb {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  color: rgba(255,255,255,0.9);
 }
 
 .btn-primary{
@@ -200,6 +213,9 @@ input[type="checkbox"].checkbox-primary:checked {
     margin: 0 auto;
     width: 98% !important;
   }
+  .page-layout {
+    gap: 1rem;
+  }
 }
 
 @media all and (max-width: 767px) {
@@ -211,6 +227,9 @@ input[type="checkbox"].checkbox-primary:checked {
   .container-style {
     box-shadow: none;
     padding: 0.75rem;
+  }
+  .page-layout {
+    gap: 0.5rem;
   }
 }
 

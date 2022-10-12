@@ -12,6 +12,14 @@ function App() {
     <Routes>
       <Route path="/" element={<SellerAdminLayout />}>
         <Route index element={(<Home />)} />
+        <Route path="/dashboard" element={<Home />} />
+        <Route path="/myproduct/all" element={<Home />} />
+        <Route path="/myproduct/new" element={<Home />} />
+        <Route path="/myvoucher/all" element={<Home />} />
+        <Route path="/myvoucher/new" element={<Home />} />
+        <Route path="/mypromotion/all" element={<Home />} />
+        <Route path="/mypromotion/new" element={<Home />} />
+        <Route path="/shipment" element={<Home />} />
       </Route>
     </Routes>
   );

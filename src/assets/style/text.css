@@ -1,0 +1,52 @@
+.breadcrumb {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  color: rgba(255,255,255,0.9);
+}
+
+.link-primary-1 {
+  color: var(--primary-dark) !important;
+  text-decoration: none;
+}
+.link-primary-1:hover {
+  color: var(--primary-dark2) !important;
+}
+
+.text-small {
+  font-size: 0.9rem;
+}
+.text-primary-1 {
+  color: var(--primary) !important;
+}
+.text-grey1{
+  color: var(--grey1) !important;
+}
+.text-grey2{
+  color: var(--grey2) !important;
+}
+.text-grey3{
+  color: var(--grey3) !important;
+}
+
+.badge-blue {
+  color: rgb(64, 122, 187);
+  background-color: rgb(190, 213, 240);
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+.badge-green {
+  color: rgb(56, 128, 77);
+  background-color: rgb(213, 243, 222);
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+.badge-gray {
+  color: rgb(128, 128, 128);
+  background-color: rgb(218, 218, 218);
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}

@@ -1,0 +1,60 @@
+.icon-blue {
+  color: rgb(64, 122, 187);
+  background-color: rgb(190, 213, 240);
+  font-size: 1.2rem;
+  border-radius: 100px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-orange {
+  color: var(--secondary-dark);
+  background-color: var(--secondary-light2);
+  font-size: 1.2rem;
+  border-radius: 100px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-mini {
+  border-radius: 0.5rem;
+  border: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--grey3);
+  text-decoration: none;
+  width: 35px;
+  height: 35px;
+}
+
+.icon-mini-blue {
+  background-color: rgb(215, 235, 253);
+}
+.icon-mini-blue:hover {
+  background-color: rgb(169, 193, 214);
+}
+.icon-mini-orange {
+  background-color: rgb(255, 233, 208);
+}
+.icon-mini-orange:hover {
+  background-color: rgb(228, 198, 165);
+}
+.icon-mini-gray {
+  background-color: rgb(243, 243, 243);
+}
+.icon-mini-gray:hover {
+  background-color: rgb(173, 173, 173);
+}
+.icon-mini-red {
+  background-color: rgb(255, 212, 212);
+}
+.icon-mini-red:hover {
+  background-color: rgb(218, 181, 181);
+}

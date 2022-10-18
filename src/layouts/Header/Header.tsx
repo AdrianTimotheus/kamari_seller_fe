@@ -19,6 +19,9 @@ export default function Header({ showSidebar, setShowSidebar }:props) {
           onClick={() => handleControl()}
         >
           <i className="bi bi-list" />
+          <span>
+            Kamari for Seller
+          </span>
         </button>
       </div>
       <div>

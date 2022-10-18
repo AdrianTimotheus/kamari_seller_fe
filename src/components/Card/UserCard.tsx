@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
+import useAppSelector from '../../hooks/useAppSelector';
+import { selectUser } from '../../store/userSlice';
 
 export default function UserCard() {
+  const user = useAppSelector(selectUser);
   return (
     <div>
       <button
@@ -12,11 +15,11 @@ export default function UserCard() {
         aria-controls="collapseUserMenu"
       >
         <img
-          src="https://www.pngitem.com/pimgs/m/579-5798505_user-placeholder-svg-hd-png-download.png"
-          alt="User profile"
+          src={user.picUrl}
+          alt=""
         />
         <span>
-          Nama user
+          {user.name}
         </span>
       </button>
       <div className="collapse header-user-menu" id="collapseUserMenu">

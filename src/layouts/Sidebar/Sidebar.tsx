@@ -1,8 +1,18 @@
 /* eslint-disable react/no-array-index-key */
 import { useMediaQuery } from '@mui/material';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import KamariSeller from '../../assets/png/Kamari-Seller.png';
+import {
+  routeCategoryList,
+  routeDashboard,
+  routeProductList,
+  routeProductNew,
+  routeProfile,
+  routePromotionList,
+  routeVoucherList,
+  routeWithdraw,
+} from '../../utils/RouteList';
 
 type props = {
   showSidebar: boolean,
@@ -10,7 +20,7 @@ type props = {
 }
 
 export default function Sidebar({ showSidebar, setShowSidebar }:props) {
-  const match = useMediaQuery('(min-width: 768px)');
+  const viewDesktop = useMediaQuery('(min-width: 768px)');
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const menu = [
     {
@@ -19,7 +29,25 @@ export default function Sidebar({ showSidebar, setShowSidebar }:props) {
       children: [
         {
           text: 'Dashboard',
-          url: '/dashboard',
+          url: routeDashboard,
+        },
+        {
+          text: 'Profil Toko',
+          url: routeProfile,
+        },
+      ],
+    },
+    {
+      text: 'Pengiriman',
+      icon: 'bi-box-seam',
+      children: [
+        {
+          text: 'Pengiriman',
+          url: '/shipment/list',
+        },
+        {
+          text: 'Pengaturan Pengiriman',
+          url: '/shipment/setting',
         },
       ],
     },
@@ -29,58 +57,51 @@ export default function Sidebar({ showSidebar, setShowSidebar }:props) {
       children: [
         {
           text: 'Produk Saya',
-          url: '/myproduct/all',
+          url: routeProductList,
         },
         {
           text: 'Tambah Produk',
-          url: '/myproduct/new',
+          url: routeProductNew,
+        },
+        {
+          text: 'Kategori Toko',
+          url: routeCategoryList,
         },
       ],
     },
     {
-      text: 'Voucher',
+      text: 'Voucher dan Promosi',
       icon: 'bi-tag',
       children: [
         {
-          text: 'Voucher Saya',
-          url: '/myvoucher/all',
+          text: 'Voucher Toko',
+          url: routeVoucherList,
         },
         {
-          text: 'Tambah Voucher',
-          url: '/myvoucher/new',
-        },
-      ],
-    },
-    {
-      text: 'Promosi',
-      icon: 'bi-megaphone',
-      children: [
-        {
-          text: 'Promosi Saya',
-          url: '/mypromotion/all',
-        },
-        {
-          text: 'Tambah Promosi',
-          url: '/mypromotion/new',
+          text: 'Promosi',
+          url: routePromotionList,
         },
       ],
     },
     {
-      text: 'Pengiriman',
-      icon: 'bi-box-seam',
+      text: 'Keuangan',
+      icon: 'bi-wallet2',
       children: [
         {
-          text: 'Semua Pengiriman',
-          url: '/shipment',
+          text: 'Penarikan Uang',
+          url: routeWithdraw,
         },
       ],
     },
   ];
   return (
     <aside
-      className={`${match ? 'sidebar' : ''}
-        ${(!match && showSidebar) ? 'sidebar-float' : ''}
-        ${(!match && !showSidebar) ? 'sidebar-hide' : ''}`}
+      className={`
+        ${(viewDesktop && showSidebar) ? 'sidebar' : ''}
+        ${(viewDesktop && !showSidebar) ? 'sidebar-hide' : ''}
+        ${(!viewDesktop && showSidebar) ? 'sidebar-float' : ''}
+        ${(!viewDesktop && !showSidebar) ? 'sidebar-hide' : ''}
+      `}
     >
       <div className="sidebar-overlay" />
       <div className="sidebar-content">
@@ -100,7 +121,7 @@ export default function Sidebar({ showSidebar, setShowSidebar }:props) {
         </div>
         <div className="sidebar-menu">
           {menu.map((item, index) => (
-            <div>
+            <div key={`sidebar-menu-${item.text}`}>
               <button
                 type="button"
                 data-bs-toggle="collapse"
@@ -117,6 +138,7 @@ export default function Sidebar({ showSidebar, setShowSidebar }:props) {
               <div className="collapse sidebar-menu-item-child" id={`collapseMenu${index}`}>
                 {item.children.map((child) => (
                   <NavLink
+                    key={`sidebar-menu-${item.text}-child-${child.text}`}
                     to={child.url}
                   >
                     {child.text}
@@ -125,6 +147,16 @@ export default function Sidebar({ showSidebar, setShowSidebar }:props) {
               </div>
             </div>
           ))}
+          <div className="sidebar-logout">
+            <div><i className="bi bi-arrow-bar-left" /></div>
+            <div>
+              <Link
+                to="/logout"
+              >
+                Keluar
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </aside>

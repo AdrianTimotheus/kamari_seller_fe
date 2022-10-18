@@ -1,0 +1,10 @@
+.table > thead {
+  background-color: var(--primary-light);
+}
+
+.table > thead > tr > th {
+  font-weight: normal;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-color: white;
+}

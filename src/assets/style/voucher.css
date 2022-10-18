@@ -1,0 +1,30 @@
+.voucher > td:first-child > div {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.voucher > td:first-child > div > div:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+}
+
+.voucher > td:first-child > div > div:nth-child(2) > span:first-child {
+  font-weight: bold;
+}
+
+.voucher > td:first-child > div > div:nth-child(2) > span:nth-child(2) {
+  font-style: italic;
+  color: var(--grey2);
+}
+
+.voucher > td:last-child {
+  width: 100px;
+}
+
+.voucher > td:last-child > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}

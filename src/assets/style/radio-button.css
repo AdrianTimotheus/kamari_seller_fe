@@ -1,0 +1,63 @@
+/* RADIO BUTTON */
+
+input[type="radio"].radio-normal:checked {
+  border: 0px;
+  background-color: var(--secondary);
+}
+
+input[type="radio"].radio-primary {
+  display: none;
+  visibility: hidden;
+}
+input[type="radio"].radio-primary + label {
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.75rem;
+  position: relative;
+  margin-left: -1.5rem;
+  background-color: white;
+  border: 2px solid var(--grey1);
+  color: #313131;
+}
+input[type="radio"].radio-primary:hover + label,
+input[type="radio"].radio-primary:checked + label,
+input[type="radio"].radio-primary:focus + label{
+  cursor: pointer;
+  border: 2px solid var(--secondary);
+}
+
+input[type="radio"].radio-tab {
+  display: none;
+  visibility: hidden;
+}
+input[type="radio"].radio-tab + label {
+  padding: 0.4rem 0.75rem 0.75rem 0.75rem;
+  position: relative;
+  margin-left: -1.5rem;
+  border-bottom: 4px solid rgba(0,0,0,0);
+  color: var(--grey2);
+}
+input[type="radio"].radio-tab:hover + label,
+input[type="radio"].radio-tab:checked + label,
+input[type="radio"].radio-tab:focus + label{
+  cursor: pointer;
+  border-bottom-color: var(--secondary);
+  color: var(--secondary);
+  font-weight: bold;
+}
+
+input[type="radio"].radio-secondary {
+  display: none;
+  visibility: hidden;
+}
+input[type="radio"].radio-secondary + label {
+  position: relative;
+  margin-left: -1.4rem;
+  color: #313131;
+}
+input[type="radio"].radio-secondary:hover + label,
+input[type="radio"].radio-secondary:checked + label,
+input[type="radio"].radio-secondary:focus + label{
+  cursor: pointer;
+  color: var(--secondary);
+  font-weight: bold;
+}

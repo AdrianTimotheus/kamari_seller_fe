@@ -1,0 +1,43 @@
+.loading_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading_container > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  border-radius: 1rem;
+  padding: 2rem;
+  background-color: rgba(255,255,255,0.5);
+}
+
+.loading__dots-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.spinner-border {
+    --bs-spinner-width: 1rem !important;
+    --bs-spinner-height: 1rem !important;
+}
+
+.MuiSkeleton-rectangular {
+    height: 100% !important;
+    background-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.carousel .MuiSkeleton-rectangular {
+ border-radius: 15px !Important;
+}
+
+.category__background-skeleton {
+    min-height: 200pxs;
+    background-color: transparent !important;
+}

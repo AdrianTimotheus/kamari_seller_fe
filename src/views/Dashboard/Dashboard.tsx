@@ -1,12 +1,12 @@
-import PageBreadcrumb from '../components/PageBreadcrumb';
-import PageTitle from '../components/PageTitle';
+import PageBreadcrumb from '../../components/Text/PageBreadcrumb';
+import PageTitle from '../../components/Text/PageTitle';
 
-export default function Home() {
+export default function Dashboard() {
   return (
     <div className="page-layout">
       <div>
         <PageTitle text="Dashboard" />
-        <PageBreadcrumb main="Dashboard" sub="Admin" />
+        <PageBreadcrumb main="Dashboard" sub="Dashboard" />
       </div>
       <div>
         <div className="page-content">

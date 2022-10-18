@@ -31,7 +31,6 @@ export default function VoucherNew() {
   const [prefix, setPrefix] = useState<string>('');
   const [form, setForm] = useState({
     title: '',
-    prefix: '',
     code: '',
     promo_type_id: '1',
     discount_amount: '',
@@ -61,7 +60,7 @@ export default function VoucherNew() {
   const submitNew = () => {
     axiosPrivate.post('/sellers/vouchers', {
       title: form.title,
-      prefix: form.prefix,
+      prefix,
       code: form.code,
       promo_type_id: parseInt(form.promo_type_id, 10),
       discount_amount: parseInt(form.discount_amount, 10),

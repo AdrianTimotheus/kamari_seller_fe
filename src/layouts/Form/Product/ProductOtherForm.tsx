@@ -1,18 +1,54 @@
 import NumberInput from '../../../components/Form/Basic/NumberInput';
+import RadioButtonNormal from '../../../components/Form/Basic/RadioButtonNormal';
 
-/* eslint-disable */
 type props = {
-  mode: string,
+  validationMsg: any,
   formProductInfo: any,
   handleChangeFormProductInfo: Function,
 }
 export default function ProductOtherForm({
-  mode,
+  validationMsg,
   formProductInfo,
   handleChangeFormProductInfo,
 }:props) {
   return (
     <div className="d-flex flex-column gap-3">
+
+      <div className="row">
+        <div className="col-12 col-lg-2">
+          Minimum Pemesanan
+        </div>
+        <div className="col-12 col-lg-10">
+          <NumberInput
+            value={formProductInfo.productMinOrder}
+            placeholder="Minimum Pemesanan"
+            fieldName="productMinOrder"
+            handleChange={handleChangeFormProductInfo}
+            min={1}
+            max={1000000}
+            validationMsg={validationMsg.productMinOrder}
+            isRequired
+          />
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-12 col-lg-2">
+          Maksimum Pemesanan
+        </div>
+        <div className="col-12 col-lg-10">
+          <NumberInput
+            value={formProductInfo.productMaxOrder}
+            placeholder="Maksimum Pemesanan"
+            fieldName="productMaxOrder"
+            handleChange={handleChangeFormProductInfo}
+            min={1}
+            max={1000000}
+            validationMsg={validationMsg.productMaxOrder}
+            isRequired
+          />
+        </div>
+      </div>
 
       <div className="row">
         <div className="col-12 col-lg-2">
@@ -24,9 +60,9 @@ export default function ProductOtherForm({
             placeholder="Berat (gr)"
             fieldName="productWeight"
             handleChange={handleChangeFormProductInfo}
-            min={1000}
+            min={1}
             max={1000000}
-            validationMsg=""
+            validationMsg={validationMsg.productWeight}
             isRequired
           />
         </div>
@@ -36,32 +72,27 @@ export default function ProductOtherForm({
         <div className="col-12 col-lg-2">
           Produk Berbahaya
         </div>
-        <div className="col-12 col-lg-10 d-flex flex-row flex-wrap gap-2">
-          <div className="form-check">
-            <input
-              id="productIsHazardous0"
-              className="form-check-input radio-normal"
-              type="radio"
-              name="productIsHazardous"
+        <div className={`col-12 col-lg-10 d-flex flex-column ${validationMsg.productIsHazardous !== '' ? 'border border-danger' : ''}`}>
+          <div className="d-flex flex-row flex-wrap gap-2">
+            <RadioButtonNormal
+              fieldId={0}
+              fieldName="productIsHazardous"
+              content="Tidak"
               value="0"
-              required
+              currentValue={formProductInfo.productIsHazardous}
+              handleChange={handleChangeFormProductInfo}
             />
-            <label className="form-check-label" htmlFor="productIsHazardous0">
-              Tidak
-            </label>
-          </div>
-          <div className="form-check">
-            <input
-              id="productIsHazardous1"
-              className="form-check-input radio-normal"
-              type="radio"
-              name="productIsHazardous"
+            <RadioButtonNormal
+              fieldId={1}
+              fieldName="productIsHazardous"
+              content="Mengandung baterai/magnet/cairan/bahan mudah terbakar"
               value="1"
-              required
+              currentValue={formProductInfo.productIsHazardous}
+              handleChange={handleChangeFormProductInfo}
             />
-            <label className="form-check-label" htmlFor="productIsHazardous0">         
-              Mengandung baterai/magnet/cairan/bahan mudah terbakar
-            </label>
+          </div>
+          <div>
+            <span className="text-danger">{validationMsg.productIsHazardous}</span>
           </div>
         </div>
       </div>

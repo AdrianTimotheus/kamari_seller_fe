@@ -1,8 +1,11 @@
 interface productVariantData {
-  name: string,
-  stock: number,
-  price: number,
-  pic_url: string,
+  mainVariant: string,
+  mainVariantItem: string,
+  subVariant: string,
+  subVariantItem: string,
+  price: string,
+  stock: string,
+  picUrl: string,
 }
 
 export default productVariantData;

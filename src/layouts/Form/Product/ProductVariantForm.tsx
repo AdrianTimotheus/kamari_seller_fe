@@ -1,23 +1,28 @@
-import { Dispatch, FormEvent, SetStateAction } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+} from 'react';
 import RadioButtonNormal from '../../../components/Form/Basic/RadioButtonNormal';
 import ProductVariant from '../../Product/ProductVariant';
 
-/* eslint-disable */
 type props = {
-  mode: string,
+  validationMsg: any,
   productSettings: any,
   setProductSettings: Dispatch<SetStateAction<any>>,
   mainVariantTitle: string,
   setMainVariantTitle: Dispatch<SetStateAction<string>>,
   subVariantTitle: string,
   setSubVariantTitle: Dispatch<SetStateAction<string>>,
-  mainVariantItems: any,
-  setMainVariantItems: Dispatch<SetStateAction<any>>,
-  subVariantItems: any,
-  setSubVariantItems: Dispatch<SetStateAction<any>>,
+  mainVariantItems: string[],
+  setMainVariantItems: Dispatch<SetStateAction<string[]>>,
+  subVariantItems: string[],
+  setSubVariantItems: Dispatch<SetStateAction<string[]>>,
 }
 export default function ProductVariantForm({
-  mode,
+  validationMsg,
   productSettings,
   setProductSettings,
   mainVariantTitle,
@@ -27,19 +32,24 @@ export default function ProductVariantForm({
   mainVariantItems,
   setMainVariantItems,
   subVariantItems,
-  setSubVariantItems
+  setSubVariantItems,
 }:props) {
   const changeIsMainVariant = (b: boolean) => {
-    setProductSettings({...productSettings, isMainVariant: b})
-  }
+    setProductSettings({ ...productSettings, isMainVariant: b });
+  };
   const changeIsSubVariant = (b: boolean) => {
-    setProductSettings({...productSettings, isSubVariant: b})
-  }
+    setProductSettings({ ...productSettings, isSubVariant: b });
+  };
   const handleEnableMainVariantChange = (e: FormEvent<HTMLInputElement>) => {
     const { value } = e.currentTarget;
-    setProductSettings({...productSettings, isMainVariant: value === '0' ? false : true});
-    console.log(value);
+    setProductSettings({ ...productSettings, isMainVariant: value !== '0' });
   };
+  useEffect(() => {
+    if (!productSettings.isSubVariant) {
+      setSubVariantTitle('');
+      setSubVariantItems(['']);
+    }
+  }, [productSettings.isSubVariant]);
   return (
     <div className="d-flex flex-column gap-3">
 
@@ -74,6 +84,8 @@ export default function ProductVariantForm({
           </div>
           <div className="col-12 col-lg-10">
             <ProductVariant
+              titleValidationMsg={validationMsg.variantMainTitle}
+              itemsValidationMsg={validationMsg.variantMainItems}
               level="main"
               handleClose={changeIsMainVariant}
               variantTitle={mainVariantTitle}
@@ -85,13 +97,15 @@ export default function ProductVariantForm({
         </div>
       )}
 
-      {productSettings.isSubVariant && (
+      {(productSettings.isMainVariant && productSettings.isSubVariant) && (
         <div className="row">
           <div className="col-12 col-lg-2">
             Variasi 2
           </div>
           <div className="col-12 col-lg-10">
             <ProductVariant
+              titleValidationMsg={validationMsg.variantSubTitle}
+              itemsValidationMsg={validationMsg.variantSubItems}
               level="sub"
               handleClose={changeIsSubVariant}
               variantTitle={subVariantTitle}
@@ -121,5 +135,5 @@ export default function ProductVariantForm({
       )}
 
     </div>
-  )
+  );
 }

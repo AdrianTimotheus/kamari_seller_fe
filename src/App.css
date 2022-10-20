@@ -60,7 +60,7 @@ p {
   gap: 1.5rem;
 }
 
-.page-layout > div:nth-child(2) {
+.page-layout > div:nth-child(2), .page-layout > div:nth-child(2) > form {
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -122,7 +122,7 @@ input[type="checkbox"].checkbox-primary:checked {
   .page-layout {
     gap: 0.5rem;
   }
-  .page-layout > div:nth-child(2) {
+  .page-layout > div:nth-child(2), .page-layout > div:nth-child(2) > form {
     display: flex;
     flex-direction: column;
     gap: 1rem;

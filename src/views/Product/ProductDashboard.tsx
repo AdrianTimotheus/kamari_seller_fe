@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-underscore-dangle */
 import { useState, FormEvent, useEffect } from 'react';
 import Toast from '../../components/Interaction/Toast';
@@ -39,9 +40,7 @@ export default function ProductDashboard() {
     if (user.username) {
       setIsLoading(true);
       setProducts([]);
-      // let url = `/sellers/${user.username}/
-      // products?sort=latest&page=${searchOpt.page}&limit=${searchOpt.limit}`;
-      let url = `/sellers/seller/products?sort=latest&page=${searchOpt.page}&limit=${parseInt(searchOpt.limit, 10)}`;
+      let url = `/sellers/${user.username}/products?sort=latest&page=${searchOpt.page}&limit=${parseInt(searchOpt.limit, 10)}`;
       if (searchOpt.keyword !== '') url += `&search=${searchOpt.keyword}`;
       axiosPublic.get(url)
         .then((res) => {

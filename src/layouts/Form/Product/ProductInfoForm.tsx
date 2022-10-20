@@ -1,38 +1,58 @@
-import { useEffect, useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+} from 'react';
 import TextArea from '../../../components/Form/Basic/TextArea';
 import TextInputWithCounter from '../../../components/Form/Custom/TextInputWithCounter';
-import Toast from '../../../components/Interaction/Toast';
-import { axiosPublic } from '../../../utils/API';
 
-/* eslint-disable */
 type props = {
-  mode: string,
+  validationMsg: any,
   formProductInfo: any,
+  setFormProductInfo: Dispatch<SetStateAction<any>>,
   handleChangeFormProductInfo: Function,
+  categories: any[],
+  subCategories: any[],
+  complementaryCategories: any[],
+  filteredSubs: any[],
+  filteredComplementaries: any[],
+  setFilteredSubs: Dispatch<SetStateAction<any[]>>,
+  setFilteredComplementaries: Dispatch<SetStateAction<any[]>>,
 }
 export default function ProductInfoForm({
-  mode,
+  validationMsg,
   formProductInfo,
+  setFormProductInfo,
   handleChangeFormProductInfo,
+  categories,
+  subCategories,
+  complementaryCategories,
+  filteredSubs,
+  filteredComplementaries,
+  setFilteredSubs,
+  setFilteredComplementaries,
 }:props) {
-  const [categories, setCategories] = useState([]);
-
-  const fetchCategories = () => {
-    axiosPublic.get('/categories')
-      .then((res) => {
-        setCategories(res.data.categories);
-      })
-      .catch((err) => {
-        Toast.fire({
-          icon: 'error',
-          title: err.message,
-        });
-      });
-  };
+  useEffect(() => {
+    setFormProductInfo({
+      ...formProductInfo,
+      productSubCategoryId: '',
+      productComplementaryCategoryId: '',
+    });
+    setFilteredSubs([]);
+    setFilteredSubs(subCategories.filter((item:any) => item.category_id
+      === parseInt(formProductInfo.productCategoryId, 10)));
+  }, [formProductInfo.productCategoryId]);
 
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    setFormProductInfo({
+      ...formProductInfo,
+      productComplementaryCategoryId: '',
+    });
+    setFilteredComplementaries([]);
+    setFilteredComplementaries(complementaryCategories.filter((item:any) => item.subcategory_id
+      === parseInt(formProductInfo.productSubCategoryId, 10)));
+  }, [formProductInfo.productSubCategoryId]);
 
   return (
     <div className="d-flex flex-column gap-3">
@@ -48,6 +68,7 @@ export default function ProductInfoForm({
             value={formProductInfo.productName}
             handleChange={handleChangeFormProductInfo}
             maxLength={255}
+            validationMsg={validationMsg.productName}
             isRequired
           />
         </div>
@@ -64,25 +85,27 @@ export default function ProductInfoForm({
             value={formProductInfo.productDescription}
             handleChange={handleChangeFormProductInfo}
             rows={4}
+            validationMsg={validationMsg.productDescription}
             isRequired
           />
         </div>
       </div>
 
-      <div className="row">
-        <div className="col-12 col-lg-2">
-          Kategori
-        </div>
-        <div className="col-12 col-lg-10 d-flex flex-row gap-2 align-items-center">
-
-          {categories.length !== 0 && (
+      {categories.length !== 0 && (
+        <div className="row">
+          <div className="col-12 col-lg-2">
+            Kategori
+          </div>
+          <div className={`col-12 col-lg-10 d-flex flex-column gap-2 ${validationMsg.productCategoryId !== '' ? 'border border-danger' : ''}`}>
             <div>
               <select
                 className="form-select"
                 name="productCategoryId"
                 value={formProductInfo.productCategoryId}
                 onChange={(e) => handleChangeFormProductInfo(e)}
+                required
               >
+                <option value="">Kategori</option>
                 {categories.map((item: any) => (
                   <option
                     key={`category-${item.id}`}
@@ -93,26 +116,76 @@ export default function ProductInfoForm({
                 ))}
               </select>
             </div>
-          )}
-          
-
-          <div>
-            <span>&#62;</span>
-          </div>
-          <div>
-            <select
-              className="form-select"
-              name="productSubCategoryId"
-              value={formProductInfo.productSubCategoryId}
-              onChange={(e) => handleChangeFormProductInfo(e)}
-            >
-              <option>Sub Kategori 1</option>
-              <option>Sub Kategori 2</option>
-              <option>Sub Kategori 3</option>
-            </select>
+            <div>
+              <span className="text-danger">{validationMsg.productCategoryId}</span>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {filteredSubs.length !== 0 && (
+        <div className="row">
+          <div className="col-12 col-lg-2">
+            Sub Kategori
+          </div>
+          <div className={`col-12 col-lg-10 d-flex flex-column gap-2 ${validationMsg.productSubCategoryId !== '' ? 'border border-danger' : ''}`}>
+            <div>
+              <select
+                className="form-select"
+                name="productSubCategoryId"
+                value={formProductInfo.productSubCategoryId}
+                onChange={(e) => handleChangeFormProductInfo(e)}
+                required
+              >
+                <option value="">Sub Kategori</option>
+                {filteredSubs.map((item: any) => (
+                  <option
+                    key={`category-${item.id}`}
+                    value={item.id}
+                  >
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <span className="text-danger">{validationMsg.productSubCategoryId}</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {filteredComplementaries.length !== 0 && (
+        <div className="row">
+          <div className="col-12 col-lg-2">
+            Sub Kategori Pelengkap
+          </div>
+          <div className={`col-12 col-lg-10 d-flex flex-column gap-2 ${validationMsg.productComplementaryCategoryId !== '' ? 'border border-danger' : ''}`}>
+            <div>
+              <select
+                className="form-select"
+                name="productComplementaryCategoryId"
+                value={formProductInfo.productComplementaryCategoryId}
+                onChange={(e) => handleChangeFormProductInfo(e)}
+                required
+              >
+                <option value="">Sub Kategori Pelengkap</option>
+                {filteredComplementaries.map((item: any) => (
+                  <option
+                    key={`category-${item.id}`}
+                    value={item.id}
+                  >
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <span className="text-danger">{validationMsg.productComplementaryCategoryId}</span>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

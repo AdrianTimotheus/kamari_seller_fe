@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import axios from 'axios';
@@ -8,21 +9,33 @@ import Toast from '../../Interaction/Toast';
 import LoadingSpinner from '../../Loading/LoadingSpinner';
 
 type props = {
-  id: string,
+  fieldId: string,
   value: string,
   handleChange: Function,
   handleDelete: Function,
+  isRequired?: boolean,
+  validationMsg?: string,
 }
 
+const defaultProps = {
+  isRequired: false,
+  validationMsg: '',
+};
+
 export default function ImageUploader({
-  id,
+  fieldId,
   value,
   handleChange,
   handleDelete,
+  isRequired,
+  validationMsg,
 }:props) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<string>(value);
+  const inputProps = isRequired ? {
+    required: true,
+  } : {};
 
   const handleUpload = (file: File) => {
     setIsLoading(true);
@@ -40,7 +53,7 @@ export default function ImageUploader({
     )
       .then((res) => {
         setImgUrl(res.data.data.url);
-        handleChange(res.data.data.url);
+        handleChange(fieldId, res.data.data.url);
       })
       .catch((err) => {
         Toast.fire({
@@ -70,14 +83,14 @@ export default function ImageUploader({
 
   return (
     <div
-      className={`img-uploader ${isClicked && 'img-uploader-clicked'}`}
+      className={`img-uploader ${isClicked && 'img-uploader-clicked'} ${validationMsg !== '' ? 'border border-danger' : ''}`}
       onClick={() => handleClick()}
     >
       {imgUrl === '' ? (
         <>
           <input
             type="file"
-            id={id}
+            id={fieldId}
             name="image"
             accept="image/png, image/jpeg"
             onChange={(e) => {
@@ -86,8 +99,9 @@ export default function ImageUploader({
               handleUpload(files[0]);
             }}
             hidden
+            {...inputProps}
           />
-          <label htmlFor={id}>
+          <label htmlFor={fieldId}>
             <i className="bi bi-upload" />
           </label>
         </>
@@ -100,7 +114,7 @@ export default function ImageUploader({
                 className="btn btn-danger"
                 type="button"
                 onClick={() => {
-                  handleDelete(imgUrl);
+                  handleDelete(fieldId);
                   handleClose();
                 }}
               >
@@ -117,6 +131,8 @@ export default function ImageUploader({
           )}
         </div>
       )}
+      <span className="text-danger">{validationMsg}</span>
     </div>
   );
 }
+ImageUploader.defaultProps = defaultProps;

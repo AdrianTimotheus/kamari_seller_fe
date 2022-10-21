@@ -18,11 +18,16 @@ import {
   routeProductList,
   routeProductNew,
   routeProfile,
+  routePromotionList,
+  routePromotionNew,
   routeVoucherList,
   routeVoucherNew,
   routeWithdraw,
 } from './utils/RouteList';
 import WithdrawDashboard from './views/Finance/WithdrawDashboard';
+import PromotionDashboard from './views/Promotion/PromotionDashboard';
+import PromotionNew from './views/Promotion/PromotionNew';
+import PromotionDetail from './views/Promotion/PromotionDetail';
 
 function App() {
   return (
@@ -45,6 +50,9 @@ function App() {
         <Route path={routeVoucherNew} element={<VoucherNew />} />
         <Route path="/voucher/:voucherId" element={<VoucherDetail />} />
         <Route path="/voucher/:voucherId/edit" element={<VoucherEdit />} />
+        <Route path={routePromotionList} element={<PromotionDashboard />} />
+        <Route path={routePromotionNew} element={<PromotionNew />} />
+        <Route path="/promotion/:promotionId" element={<PromotionDetail />} />
 
         {/* finance */}
         <Route path={routeWithdraw} element={<WithdrawDashboard />} />

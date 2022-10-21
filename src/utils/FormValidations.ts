@@ -104,7 +104,7 @@ export const validateVoucherTitle = (text: string) => {
 };
 
 export const validatePromoType = (text: string) => {
-  if (text === '') return 'Masukkan tipe promo';
+  if (text === '') return 'Pilih tipe promo';
   if (text === '1' || text === '2') return '';
   return 'Tipe promo tidak valid';
 };
@@ -311,5 +311,27 @@ export const validateVariantStockItems = (items: string[]) => {
 
 export const validatePhoto = (text: string) => {
   if (text === '') return 'Upload foto';
+  return '';
+};
+
+export const validatePromotionTitle = (text: string) => {
+  if (text === '') return 'Masukkan nama promosi';
+  if (text.length > 50) return 'Nama promosi maksimal 50 karakter';
+
+  const re = /^[a-zA-Z 0-9]+$/;
+  if (!re.test(text)) {
+    return 'Nama promosi terdiri dari kombinasi huruf kecil, huruf besar dan angka';
+  }
+  return '';
+};
+
+export const validateMaxItem = (text: string) => {
+  if (text === '') return 'Masukkan batas pembelian';
+  const re = /^[0-9]+$/;
+  if (!re.test(text)) {
+    return 'Angka tidak valid';
+  }
+  const maxItemInt = parseInt(text, 10);
+  if (maxItemInt < 1) return 'Tidak boleh kurang dari 1';
   return '';
 };

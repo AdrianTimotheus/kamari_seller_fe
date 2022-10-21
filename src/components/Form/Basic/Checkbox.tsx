@@ -4,10 +4,12 @@ type props = {
   content: any;
   handleChange: Function,
   currentState?: boolean,
+  hideLabel?: boolean,
 };
 
 const defaultProps = {
   currentState: false,
+  hideLabel: false,
 };
 
 export default function Checkbox({
@@ -15,6 +17,7 @@ export default function Checkbox({
   content,
   handleChange,
   currentState,
+  hideLabel,
 }: props) {
   const inputProps = currentState ? {
     checked: true,
@@ -29,9 +32,11 @@ export default function Checkbox({
         value={value}
         {...inputProps}
       />
-      <label className="form-check-label" htmlFor={value}>
-        {content}
-      </label>
+      {!hideLabel && (
+        <label className="form-check-label" htmlFor={value}>
+          {content}
+        </label>
+      )}
     </div>
   );
 }

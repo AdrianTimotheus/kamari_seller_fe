@@ -9,5 +9,6 @@ export const routeVoucherList = '/voucher';
 export const routeVoucherNew = '/voucher/new';
 
 export const routePromotionList = '/promotion';
+export const routePromotionNew = '/promotion/new';
 
 export const routeWithdraw = '/withdraw';

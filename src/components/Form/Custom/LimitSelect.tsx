@@ -15,6 +15,7 @@ export default function LimitSelect({
         value={value}
         onChange={(e) => handleChange(e)}
       >
+        <option value="1">1</option>
         <option value="5">5</option>
         <option value="10">10</option>
         <option value="50">50</option>

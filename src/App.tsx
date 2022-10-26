@@ -28,6 +28,7 @@ import WithdrawDashboard from './views/Finance/WithdrawDashboard';
 import PromotionDashboard from './views/Promotion/PromotionDashboard';
 import PromotionNew from './views/Promotion/PromotionNew';
 import PromotionDetail from './views/Promotion/PromotionDetail';
+import PromotionEdit from './views/Promotion/PromotionEdit';
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
         <Route path={routePromotionList} element={<PromotionDashboard />} />
         <Route path={routePromotionNew} element={<PromotionNew />} />
         <Route path="/promotion/:promotionId" element={<PromotionDetail />} />
+        <Route path="/promotion/:promotionId/edit" element={<PromotionEdit />} />
 
         {/* finance */}
         <Route path={routeWithdraw} element={<WithdrawDashboard />} />

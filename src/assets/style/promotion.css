@@ -1,13 +1,7 @@
 .promo-list__product {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
-}
-
-.promo-list__product > div {
-  display: flex;
-  flex-direction: row;
-  gap: 0.5rem
 }
 
 .promo-list__product > div > img {
@@ -47,6 +41,9 @@
   border-radius: 0.5rem;
 }
 
+.promotion > td:last-child {
+  width: 100px;
+}
 .promotion > td:last-child > div {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -78,4 +75,52 @@
   border-bottom: 1px solid #e8e8e8;
   border-left: 1px solid #e8e8e8;
   border-right: 1px solid #e8e8e8;
+}
+
+/* PROMO FORM ITEM */
+
+.promo-form-item > div:first-child {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  background-color: #e8e8e8;
+  padding: 1rem;
+  border-radius: 1rem 1rem 0px 0px;
+  border-top: 1px solid #e8e8e8;
+  border-left: 1px solid #e8e8e8;
+  border-right: 1px solid #e8e8e8;
+  align-items: center;
+  justify-content: space-between;
+}
+.promo-form-item > div:first-child > div {
+  display: flex;
+  flex-direction: row;
+}
+.promo-form-item > div:first-child > div > div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 1rem;
+}
+.promo-form-item > div:first-child > div > div > img {
+  width: 50px;
+  aspect-ratio : 1 / 1;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  margin-left: 0.5rem;
+}
+.promo-form-item > div:last-child {
+  padding: 0.5rem;
+  border-radius: 0px 0px 1rem 1rem;
+  border-bottom: 1px solid #e8e8e8;
+  border-left: 1px solid #e8e8e8;
+  border-right: 1px solid #e8e8e8;
+}
+
+
+.promotion-items-controller {
+  margin: 1.5rem 0px;
+  padding: 1rem;
+  background-color: #dbecfc;
+  border-radius: 1rem;
 }

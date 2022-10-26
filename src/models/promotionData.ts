@@ -24,6 +24,7 @@ interface promotionData {
   start_date: string,
   end_date: string,
   merchant_id: number,
+  has_ended: boolean,
   product_promo_items: promoItem[],
 }
 

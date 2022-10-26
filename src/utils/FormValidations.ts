@@ -121,6 +121,19 @@ export const validatePrice = (text: string, min: number) => {
   return '';
 };
 
+export const validatePromoAmount = (text: string, min: number, normalPrice: number) => {
+  if (text === '') return 'Masukkan nominal';
+  const re = /^[0-9]+$/;
+  if (!re.test(text)) {
+    return 'Angka tidak valid';
+  }
+
+  const inInt = parseInt(text, 10);
+  if (inInt < min) return `Tidak boleh kurang dari Rp ${min}`;
+  if (inInt > normalPrice) return 'Tidak boleh melebihi harga produk';
+  return '';
+};
+
 export const validatePercentage = (text: string) => {
   if (text === '') return 'Masukkan persentase';
   const re = /^[0-9]+$/;

@@ -21,6 +21,9 @@ export default function PromotionDetailList({
           {promoItems.map((item) => (
             <PromotionDetailItem promoItem={item} />
           ))}
+          {promoItems.length === 0 && (
+            <span className="text-grey2">Tidak ada data</span>
+          )}
         </div>
       )}
     </div>

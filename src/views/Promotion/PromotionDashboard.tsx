@@ -49,8 +49,9 @@ export default function PromotionDashboard() {
       .catch((err) => {
         Toast.fire({
           icon: 'error',
-          title: err.message,
+          title: 'Terdapat masalah koneksi',
         });
+        throw new Error(err);
       })
       .finally(() => {
         setIsLoading(false);

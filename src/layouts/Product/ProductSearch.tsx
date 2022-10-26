@@ -1,4 +1,3 @@
-import { FormEvent } from 'react';
 import LimitSelect from '../../components/Form/Custom/LimitSelect';
 import SearchGroup from '../../components/Form/Custom/SearchGroup';
 
@@ -18,8 +17,7 @@ export default function ProductSearch({
   getProducts,
   marginY,
 }:props) {
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     getProducts();
   };
   return (

@@ -1,4 +1,5 @@
 interface promoItemData {
+  promo_item_id: number,
   product_id: number,
   promo_type_id: string,
   discount_amount: string,

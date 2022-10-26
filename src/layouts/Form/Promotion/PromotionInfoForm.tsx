@@ -1,24 +1,31 @@
+import HasEndedBadge from '../../../components/Badge/Status/HasEndedBadge';
+import OnGoingBadge from '../../../components/Badge/Status/OnGoingBadge';
+import WillComeBadge from '../../../components/Badge/Status/WillComeBadge';
 import DateInput from '../../../components/Form/Basic/DateInput';
 import TextInputWithCounter from '../../../components/Form/Custom/TextInputWithCounter';
+import {
+  isEnded, isOnGoing, isWillCome, parseDate,
+} from '../../../utils/Date';
 
-/* eslint-disable */
 type props = {
+  mode: string,
   formPromotionInfo: any,
   validationMsg: any,
   handleChange: Function,
-  promotion?: any,
 }
 
-const defaultProps = {
-  promotion: {},
-};
-
 export default function PromotionInfoForm({
+  mode,
   formPromotionInfo,
   validationMsg,
   handleChange,
-  promotion,
 }:props) {
+  let status = '';
+  if (mode === 'edit') {
+    if (isEnded(formPromotionInfo.end_date)) status = 'hasEnded';
+    else if (isWillCome(formPromotionInfo.start_date)) status = 'willCome';
+    else if (isOnGoing(formPromotionInfo.start_date, formPromotionInfo.end_date)) status = 'onGoing';
+  }
   return (
     <div>
       <table className="table table-borderless m-0 w-100">
@@ -43,6 +50,18 @@ export default function PromotionInfoForm({
               </div>
             </td>
           </tr>
+          {mode === 'edit' && (
+          <tr>
+            <td>
+              <span className="text-grey2">Status</span>
+            </td>
+            <td>
+              {status === 'hasEnded' && <HasEndedBadge />}
+              {status === 'willCome' && <WillComeBadge />}
+              {status === 'onGoing' && <OnGoingBadge />}
+            </td>
+          </tr>
+          )}
           <tr>
             <td>
               <label className="text-grey2" htmlFor="start_date">
@@ -50,26 +69,34 @@ export default function PromotionInfoForm({
               </label>
             </td>
             <td>
-              <div className={`d-flex flex-column ${validationMsg.start_end_date !== '' && 'border border-danger'}`}>
-                <div className="d-flex flex-row align-items-center gap-2 flex-wrap">
-                  <DateInput
-                    fieldName="start_date"
-                    value={formPromotionInfo.start_date}
-                    handleChange={handleChange}
-                    validationMsg=""
-                    isRequired
-                  />
-                  <span>-</span>
-                  <DateInput
-                    fieldName="end_date"
-                    value={formPromotionInfo.end_date}
-                    handleChange={handleChange}
-                    validationMsg=""
-                    isRequired
-                  />
+              {mode === 'new' ? (
+                <div className={`d-flex flex-column ${validationMsg.start_end_date !== '' && 'border border-danger'}`}>
+                  <div className="d-flex flex-row align-items-center gap-2 flex-wrap">
+                    <DateInput
+                      fieldName="start_date"
+                      value={formPromotionInfo.start_date}
+                      handleChange={handleChange}
+                      validationMsg=""
+                      isRequired
+                    />
+                    <span>-</span>
+                    <DateInput
+                      fieldName="end_date"
+                      value={formPromotionInfo.end_date}
+                      handleChange={handleChange}
+                      validationMsg=""
+                      isRequired
+                    />
+                  </div>
+                  <span className="text-danger">{validationMsg.start_end_date}</span>
                 </div>
-                <span className="text-danger">{validationMsg.start_end_date}</span>
-              </div>
+              ) : (
+                <span>
+                  {parseDate(formPromotionInfo.start_date)}
+                  {' - '}
+                  {parseDate(formPromotionInfo.end_date)}
+                </span>
+              )}
             </td>
           </tr>
         </tbody>
@@ -77,4 +104,3 @@ export default function PromotionInfoForm({
     </div>
   );
 }
-PromotionInfoForm.defaultProps = defaultProps;

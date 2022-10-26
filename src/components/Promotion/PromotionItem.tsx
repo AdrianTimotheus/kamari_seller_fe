@@ -15,7 +15,7 @@ type props = {
 }
 export default function PromotionItem({ promotion }:props) {
   let status = '';
-  if (isEnded(promotion.end_date)) status = 'hasEnded';
+  if (isEnded(promotion.end_date) || promotion.has_ended) status = 'hasEnded';
   else if (isWillCome(promotion.start_date)) status = 'willCome';
   else if (isOnGoing(promotion.start_date, promotion.end_date)) status = 'onGoing';
   return (
@@ -48,12 +48,30 @@ export default function PromotionItem({ promotion }:props) {
       </td>
       <td>
         <div>
+          {status === 'hasEnded' && (
+            <Link
+              to={`/promotion/${promotion.id}`}
+              title="Detail"
+              className="icon-mini icon-mini-blue"
+            >
+              <i className="bi bi-eye" />
+            </Link>
+          )}
+          {['willCome', 'onGoing'].includes(status) && (
+            <Link
+              to={`/promotion/${promotion.id}/edit`}
+              title="Edit"
+              className="icon-mini icon-mini-orange"
+            >
+              <i className="bi bi-pencil" />
+            </Link>
+          )}
           <Link
-            to={`/promotion/${promotion.id}`}
-            title="Detail"
-            className="icon-mini icon-mini-blue"
+            to={`/promotion/new?copy=${promotion.id}`}
+            title="Duplikat"
+            className="icon-mini icon-mini-gray"
           >
-            <i className="bi bi-eye" />
+            <i className="bi bi-files" />
           </Link>
         </div>
       </td>

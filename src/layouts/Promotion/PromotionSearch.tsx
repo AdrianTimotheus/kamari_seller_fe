@@ -13,8 +13,7 @@ export default function PromotionSearch({
   handleChange,
   getPromotions,
 }:props) {
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     getPromotions();
   };
   return (

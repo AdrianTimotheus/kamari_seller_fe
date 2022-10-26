@@ -6,6 +6,7 @@ import PageTitle from '../../components/Text/PageTitle';
 import PromotionDetailList from '../../layouts/Promotion/PromotionDetailList';
 import PromotionInfo from '../../layouts/Promotion/PromotionInfo';
 import { axiosPrivate } from '../../utils/API';
+import { isEnded } from '../../utils/Date';
 import { routePromotionList } from '../../utils/RouteList';
 
 export default function PromotionDetail() {
@@ -19,8 +20,12 @@ export default function PromotionDetail() {
     if (params.promotionId) {
       axiosPrivate.get(`/sellers/promos/${params.promotionId}`)
         .then((res) => {
-          setPromotion(res.data);
-          setPromoItems(res.data.product_promo_items);
+          if (isEnded(res.data.end_date) || res.data.has_ended) {
+            setPromotion(res.data);
+            setPromoItems(res.data.product_promo_items);
+          } else {
+            navigate(routePromotionList);
+          }
         })
         .catch(() => {
           navigate(routePromotionList);
@@ -28,6 +33,8 @@ export default function PromotionDetail() {
         .finally(() => {
           setIsLoading(false);
         });
+    } else {
+      navigate(routePromotionList);
     }
   }, []);
 

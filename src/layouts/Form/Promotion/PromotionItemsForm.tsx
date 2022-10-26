@@ -1,15 +1,23 @@
-import { Fragment } from 'react';
-import Checkbox from '../../../components/Form/Basic/Checkbox';
-import NumberInput from '../../../components/Form/Basic/NumberInput';
-import RadioButtonNormal from '../../../components/Form/Basic/RadioButtonNormal';
-import PercentInput from '../../../components/Form/Custom/PercentInput';
-import PriceInput from '../../../components/Form/Custom/PriceInput';
+/* eslint-disable react/no-array-index-key */
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useState,
+} from 'react';
+import Swal from 'sweetalert2';
+import Toast from '../../../components/Interaction/Toast';
 import promoItemData from '../../../models/promoItemData';
-import { formatPrice } from '../../../utils/Utils';
+import { axiosPrivate } from '../../../utils/API';
 import AddProductModal from '../../Promotion/AddProductModal';
+import PromotionFormItemForm from './PromotionFormItemForm';
+import PromotionItemsController from './PromotionItemsController';
 
 type props = {
+  mode: string,
+  promotionId?: number,
   formPromotionItems: promoItemData[],
+  setFormPromotionItems: Dispatch<SetStateAction<promoItemData[]>>,
   handleChangeFormPromotionItems: Function,
   handleUpdateProductItems: Function,
   itemsValidationMsg: {
@@ -18,20 +26,135 @@ type props = {
     stock: string[],
     maxItem: string[],
   },
+  fetchPromoItems: Function,
 }
 
+const defaultProps = {
+  promotionId: 0,
+};
+
 export default function PromotionItemsForm({
+  mode,
+  promotionId,
   formPromotionItems,
+  setFormPromotionItems,
   handleChangeFormPromotionItems,
   handleUpdateProductItems,
   itemsValidationMsg,
+  fetchPromoItems,
 }:props) {
+  const [checkedProductIds, setCheckedProductIds] = useState<number[]>([]);
+  const [tempSelectedProductIds, setTempSelectedProductIds] = useState<number[]>([]);
+  const handleChangeCheckedProductId = (e: FormEvent<HTMLInputElement>) => {
+    const productId = parseInt(e.currentTarget.value, 10);
+    if (checkedProductIds.includes(productId)) {
+      setCheckedProductIds((prev) => prev.filter((item) => item !== productId));
+    } else {
+      setCheckedProductIds([...checkedProductIds, productId]);
+    }
+  };
+  const handleSelectAll = () => {
+    if (checkedProductIds.length < formPromotionItems.length) {
+      setCheckedProductIds(() => formPromotionItems.map((item) => item.product_id));
+    } else {
+      setCheckedProductIds([]);
+    }
+  };
+  const handleUpdateAll = (
+    promoType: string,
+    discount: string,
+    stock: string,
+    maxItem: string,
+  ) => {
+    setFormPromotionItems((prev) => prev.map((item) => {
+      if (checkedProductIds.includes(item.product_id)) {
+        return {
+          promo_item_id: item.promo_item_id,
+          product_id: item.product_id,
+          promo_type_id: promoType,
+          discount_amount: discount,
+          stock_left: stock,
+          maximum_item: maxItem,
+          product: item.product,
+        };
+      }
+      return item;
+    }));
+  };
+  const handleChangeTempSelectedProductIds = (product: any) => {
+    if (tempSelectedProductIds.includes(product.id)) {
+      setTempSelectedProductIds((prev) => prev.filter((item) => item !== product.id));
+    } else {
+      setTempSelectedProductIds([...tempSelectedProductIds, product.id]);
+    }
+  };
+  const submitPostPromoItems = () => {
+    axiosPrivate.post(`/sellers/promos/${promotionId}/promo-items`, {
+      promotionItems: tempSelectedProductIds.map((item) => ({
+        product_id: item,
+        promo_type_id: 1,
+      })),
+    })
+      .then(() => {
+        Toast.fire({
+          icon: 'success',
+          title: 'Produk berhasil ditambahkan ke promosi',
+        });
+        fetchPromoItems();
+      })
+      .catch((err) => {
+        Toast.fire({
+          icon: 'error',
+          title: 'Gagal menambah ke promosi',
+        });
+        throw new Error(err);
+      });
+  };
+  const submitDeletePromoItems = (product: any) => {
+    Swal.fire({
+      text: 'Hapus produk ini dari promosi?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#E75B5B',
+      cancelButtonColor: '#cecece',
+      confirmButtonText: 'Ya, hapus',
+      cancelButtonText: 'Batal',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosPrivate.delete(`/sellers/promos/${promotionId}/promo-items`, {
+          data: {
+            promo_items_id: formPromotionItems
+              .filter((filterItem) => filterItem.product_id === product.id)
+              .map((mapItem) => mapItem.promo_item_id),
+          },
+        })
+          .then((res) => {
+            if (res.status === 200) {
+              Toast.fire({
+                icon: 'success',
+                title: 'Produk dihapus dari promosi',
+              });
+              fetchPromoItems();
+            }
+          })
+          .catch((err) => {
+            Toast.fire({
+              icon: 'error',
+              title: 'Gagal menghapus dari promosi',
+            });
+            throw new Error(err);
+          });
+      }
+    });
+  };
   return (
     <div>
       <div>
         <AddProductModal
+          mode={mode}
           formPromotionItems={formPromotionItems}
-          handleUpdateProductItems={handleUpdateProductItems}
+          handleUpdateProductItems={mode === 'new' ? handleUpdateProductItems : handleChangeTempSelectedProductIds}
+          submitPostPromoItems={submitPostPromoItems}
         />
         <button
           type="button"
@@ -44,140 +167,29 @@ export default function PromotionItemsForm({
         </button>
       </div>
       {formPromotionItems.length !== 0 && (
-        <div className="mt-3">
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">
-                  <Checkbox
-                    value=""
-                    handleChange={console.log}
-                    content={undefined}
-                    hideLabel
-                  />
-                </th>
-                <th scope="col" style={{ width: 1 }}>Produk</th>
-                <th scope="col">Harga</th>
-                <th scope="col">Tipe Promo</th>
-                <th scope="col">Diskon</th>
-                <th scope="col">Stok Promosi</th>
-                <th scope="col">Batas Pembelian</th>
-                <th scope="col" style={{ width: 1 }}>Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              {formPromotionItems.map((item, index: number) => (
-                <Fragment key={`promo-items-${item.product_id}`}>
-                  <tr className="promo-items__product-info">
-                    <td>
-                      <Checkbox
-                        value=""
-                        handleChange={console.log}
-                        content=""
-                        hideLabel
-                      />
-                    </td>
-                    <td colSpan={6}>
-                      <div>
-                        <img src={item.product.thumbnail_url} alt={item.product.title} />
-                        <span>{item.product.title}</span>
-                      </div>
-                    </td>
-                    <td>
-                      <button
-                        type="button"
-                        title="Hapus"
-                        className="icon-mini icon-mini-red"
-                        onClick={() => handleUpdateProductItems(item.product)}
-                      >
-                        <i className="bi bi-trash2" />
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td />
-                    <td />
-                    <td>
-                      {formatPrice(item.product.price)}
-                    </td>
-                    <td>
-                      <div className="d-flex flex-column">
-                        <RadioButtonNormal
-                          fieldId={0}
-                          fieldName={`promo_type_id#${item.product_id}`}
-                          value="1"
-                          content="Nominal"
-                          handleChange={handleChangeFormPromotionItems}
-                          currentValue={item.promo_type_id}
-                        />
-                        <RadioButtonNormal
-                          fieldId={1}
-                          fieldName={`promo_type_id#${item.product_id}`}
-                          value="2"
-                          content="Persentase"
-                          handleChange={handleChangeFormPromotionItems}
-                          currentValue={item.promo_type_id}
-                        />
-                      </div>
-                      <span className="text-danger">{itemsValidationMsg.promoType[index]}</span>
-                    </td>
-                    <td>
-                      <div>
-                        {item.promo_type_id === '1' ? (
-                          <PriceInput
-                            value={item.discount_amount}
-                            placeholder="Diskon"
-                            fieldName={`discount_amount#${item.product_id}`}
-                            handleChange={handleChangeFormPromotionItems}
-                            min={1000}
-                            max={1000000}
-                            validationMsg={itemsValidationMsg.discount[index]}
-                            isRequired
-                          />
-                        ) : (
-                          <PercentInput
-                            value={item.discount_amount}
-                            placeholder="Diskon"
-                            fieldName={`discount_amount#${item.product_id}`}
-                            handleChange={handleChangeFormPromotionItems}
-                            validationMsg={itemsValidationMsg.discount[index]}
-                            isRequired
-                          />
-                        )}
-                      </div>
-                    </td>
-                    <td>
-                      <NumberInput
-                        value={item.stock_left}
-                        placeholder="Stok Promosi"
-                        fieldName={`stock_left#${item.product_id}`}
-                        handleChange={handleChangeFormPromotionItems}
-                        min={1}
-                        max={1000000}
-                        validationMsg={itemsValidationMsg.stock[index]}
-                        isRequired
-                      />
-                    </td>
-                    <td>
-                      <NumberInput
-                        value={item.maximum_item}
-                        placeholder="Batas Pembelian"
-                        fieldName={`maximum_item#${item.product_id}`}
-                        handleChange={handleChangeFormPromotionItems}
-                        min={1}
-                        max={1000000}
-                        validationMsg={itemsValidationMsg.maxItem[index]}
-                        isRequired
-                      />
-                    </td>
-                    <td />
-                  </tr>
-                </Fragment>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <>
+          <PromotionItemsController
+            isAllSelected={checkedProductIds.length === formPromotionItems.length}
+            handleSelectAll={handleSelectAll}
+            handleUpdateAll={handleUpdateAll}
+          />
+          <div className="d-flex flex-column gap-3">
+            {formPromotionItems.map((item, index: number) => (
+              <PromotionFormItemForm
+                key={`promotion-form-item-form-${index}`}
+                index={index}
+                item={item}
+                handleUpdateProductItems={mode === 'new' ? handleUpdateProductItems : submitDeletePromoItems}
+                handleChangeFormPromotionItems={handleChangeFormPromotionItems}
+                itemsValidationMsg={itemsValidationMsg}
+                checkedProductIds={checkedProductIds}
+                handleChangeCheckedProductId={handleChangeCheckedProductId}
+              />
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
 }
+PromotionItemsForm.defaultProps = defaultProps;

@@ -10,13 +10,17 @@ import ProductSearch from '../Product/ProductSearch';
 import PromoAddProductTable from '../Table/Promotion/PromoAddProductTable';
 
 type props = {
+  mode: string,
   formPromotionItems: promoItemData[],
   handleUpdateProductItems: Function,
+  submitPostPromoItems: Function,
 }
 
 export default function AddProductModal({
+  mode,
   formPromotionItems,
   handleUpdateProductItems,
+  submitPostPromoItems,
 }:props) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [products, setProducts] = useState<any[]>([]);
@@ -40,7 +44,7 @@ export default function AddProductModal({
     setIsLoading(true);
     setProducts([]);
     let url = `/sellers/promos/available-products?&page=${searchOpt.page}&limit=${parseInt(searchOpt.limit, 10)}`;
-    if (searchOpt.keyword !== '') url += `&search=${searchOpt.keyword}`;
+    if (searchOpt.keyword !== '') url += `&keyword=${searchOpt.keyword}`;
     axiosPrivate.get(url)
       .then((res) => {
         if (res.data.products) setProducts(res.data.products);
@@ -49,8 +53,9 @@ export default function AddProductModal({
       .catch((err) => {
         Toast.fire({
           icon: 'error',
-          title: err.message,
+          title: 'Terdapat masalah koneksi',
         });
+        throw new Error(err);
       })
       .finally(() => {
         setIsLoading(false);
@@ -108,7 +113,16 @@ export default function AddProductModal({
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-light" data-bs-dismiss="modal">Tutup</button>
-            {/* <button type="button" className="btn btn-secondary">Simpan</button> */}
+            {mode === 'edit' && (
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+                onClick={() => submitPostPromoItems()}
+              >
+                Simpan
+              </button>
+            )}
           </div>
         </div>
       </div>

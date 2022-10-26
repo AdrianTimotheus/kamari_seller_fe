@@ -13,7 +13,7 @@ export default function SearchGroup({
   handleSubmit,
 }:props) {
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
       <div className="input-group mb-3 search-group">
         <input
           type="text"
@@ -27,11 +27,12 @@ export default function SearchGroup({
         />
         <button
           className="btn grey-btn"
-          type="submit"
+          type="button"
+          onClick={() => handleSubmit()}
         >
           <i className="bi bi-search" />
         </button>
       </div>
-    </form>
+    </div>
   );
 }

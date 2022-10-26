@@ -13,8 +13,7 @@ export default function VoucherSearch({
   handleChange,
   getVouchers,
 }:props) {
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     getVouchers();
   };
   return (

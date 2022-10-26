@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable */
 import { useState, FormEvent, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Toast from '../../components/Interaction/Toast';
@@ -13,9 +12,9 @@ import {
   validatePromoType,
   validateStock,
   validateStartEndDate,
-  validatePrice,
   validatePercentage,
   validateMaxItem,
+  validatePromoAmount,
 } from '../../utils/FormValidations';
 import FormSkeleton from '../../components/Loading/FormSkeleton';
 import PromotionInfoForm from '../../layouts/Form/Promotion/PromotionInfoForm';
@@ -50,7 +49,7 @@ export default function PromotionNew() {
     stock: [],
     maxItem: [],
   });
-  
+
   const handleChangePromotionInfo = (
     e: FormEvent<HTMLInputElement> | FormEvent<HTMLTextAreaElement>,
   ) => {
@@ -62,50 +61,50 @@ export default function PromotionNew() {
     const { name } = e.currentTarget;
     const { value } = e.currentTarget;
     const [key, id] = name.split('#');
-    setFormPromotionItems((prev) => {
-      return prev.map((item) => {
-        if (item.product_id === parseInt(id, 10)) return {
+    setFormPromotionItems((prev) => prev.map((item) => {
+      if (item.product_id === parseInt(id, 10)) {
+        return {
           ...item,
           [key]: value,
-        }
-        return item;
-      })
-    });
+        };
+      }
+      return item;
+    }));
   };
   const handleUpdateProductItems = (product: any) => {
     if (formPromotionItems.find((item) => item.product_id === product.id)) {
-      setFormPromotionItems((prev) => {
-        return prev.filter((item) => item.product_id !== product.id);
-      })
+      setFormPromotionItems((prev) => prev.filter((item) => item.product_id !== product.id));
     } else {
       setFormPromotionItems([...formPromotionItems, {
+        promo_item_id: 0,
         product_id: product.id,
         promo_type_id: '',
         discount_amount: '',
         stock_left: '',
         maximum_item: '',
-        product: product,
+        product,
       }]);
-    }    
+    }
+  };
+  const fetchPromoItems = () => {
+    //
   };
 
   const submitNew = () => {
-    const promoItems = formPromotionItems.map((item) => {
-      return {
-        product_id: item.product_id,
-        promo_type_id: parseInt(item.promo_type_id ,10),
-        discount_amount: parseInt(item.discount_amount ,10),
-        stock_left: parseInt(item.stock_left ,10),
-        maximum_item: parseInt(item.maximum_item ,10),
-      }
-    })
+    const promoItems = formPromotionItems.map((item) => ({
+      product_id: item.product_id,
+      promo_type_id: parseInt(item.promo_type_id, 10),
+      discount_amount: parseInt(item.discount_amount, 10),
+      stock_left: parseInt(item.stock_left, 10),
+      maximum_item: parseInt(item.maximum_item, 10),
+    }));
     axiosPrivate.post('/sellers/promos', {
       title: formPromotionInfo.title,
       start_date: convertDateToUnix(formPromotionInfo.start_date),
       end_date: convertDateToUnix(formPromotionInfo.end_date),
       promo_items: promoItems,
     })
-      .then((res) => {
+      .then(() => {
         Toast.fire({
           icon: 'success',
           title: 'Promosi berhasil dibuat',
@@ -115,8 +114,9 @@ export default function PromotionNew() {
       .catch((err) => {
         Toast.fire({
           icon: 'error',
-          title: err.message,
+          title: 'Gagal membuat promosi',
         });
+        throw new Error(err);
       });
   };
 
@@ -124,19 +124,14 @@ export default function PromotionNew() {
     const titleValidation = validatePromotionTitle(formPromotionInfo.title);
     const startEndDateValidation = validateStartEndDate('new', formPromotionInfo.start_date, formPromotionInfo.end_date);
 
-    const promoTypeValidations = formPromotionItems.map((item) => {
-      return validatePromoType(item.promo_type_id);
-    });
+    const promoTypeValidations = formPromotionItems
+      .map((item) => validatePromoType(item.promo_type_id));
     const discountValidations = formPromotionItems.map((item) => {
-      if (item.promo_type_id === '1') return validatePrice(item.discount_amount, 1);
+      if (item.promo_type_id === '1') return validatePromoAmount(item.discount_amount, 1, item.product.price);
       return validatePercentage(item.discount_amount);
     });
-    const stockValidations = formPromotionItems.map((item) => {
-      return validateStock(item.stock_left);
-    });
-    const maxItemValidations = formPromotionItems.map((item) => {
-      return validateMaxItem(item.maximum_item);
-    });
+    const stockValidations = formPromotionItems.map((item) => validateStock(item.stock_left));
+    const maxItemValidations = formPromotionItems.map((item) => validateMaxItem(item.maximum_item));
 
     setItemsValidationMsg({
       ...itemsValidationMsg,
@@ -144,8 +139,8 @@ export default function PromotionNew() {
       discount: discountValidations,
       stock: stockValidations,
       maxItem: maxItemValidations,
-    })
-    
+    });
+
     setValidationMsg({
       ...validationMsg,
       title: titleValidation,
@@ -179,24 +174,20 @@ export default function PromotionNew() {
 
   useEffect(() => {
     if (searchParams.get('copy')) {
-      // axiosPrivate.get(`/sellers/promotions/${searchParams.get('copy')}`)
-      //   .then((res) => {
-      //     const promotion = res.data;
-      //     setForm({
-      //       ...form,
-      //       title: promotion.title,
-      //       promo_type_id: promotion.promo_type_id.toString(),
-      //       discount_amount: promotion.discount_amount,
-      //       stock_left: promotion.stock_left,
-      //       minimum_payment: promotion.minimum_payment,
-      //     });
-      //   })
-      //   .catch(() => {
-      //     navigate(routePromotionList);
-      //   })
-      //   .finally(() => {
-      //     setIsLoading(false);
-      //   });
+      axiosPrivate.get(`/sellers/promos/${searchParams.get('copy')}`)
+        .then((res) => {
+          const promotion = res.data;
+          setFormPromotionInfo({
+            ...formPromotionInfo,
+            title: promotion.title,
+          });
+        })
+        .catch(() => {
+          navigate(routePromotionList);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     } else {
       setIsLoading(false);
     }
@@ -216,6 +207,7 @@ export default function PromotionNew() {
               <FormSkeleton />
             ) : (
               <PromotionInfoForm
+                mode="new"
                 formPromotionInfo={formPromotionInfo}
                 handleChange={handleChangePromotionInfo}
                 validationMsg={validationMsg}
@@ -228,16 +220,21 @@ export default function PromotionNew() {
               <FormSkeleton />
             ) : (
               <PromotionItemsForm
+                mode="new"
                 formPromotionItems={formPromotionItems}
+                setFormPromotionItems={setFormPromotionItems}
                 handleChangeFormPromotionItems={handleChangeFormPromotionItems}
                 handleUpdateProductItems={handleUpdateProductItems}
                 itemsValidationMsg={itemsValidationMsg}
+                fetchPromoItems={fetchPromoItems}
               />
             )}
           </div>
-          <div className="page-content d-flex justify-content-end">
-            <SubmitButton text="Buat Promosi" />
-          </div>
+          {!isLoading && (
+            <div className="page-content d-flex justify-content-end">
+              <SubmitButton text="Buat Promosi" />
+            </div>
+          )}
         </form>
       </div>
     </div>

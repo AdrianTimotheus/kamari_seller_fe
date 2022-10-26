@@ -20,7 +20,7 @@ export default function PromotionInfo({
   promotion,
 }:props) {
   let status = '';
-  if (isEnded(promotion.end_date)) status = 'hasEnded';
+  if (isEnded(promotion.end_date) || promotion.has_ended) status = 'hasEnded';
   else if (isWillCome(promotion.start_date)) status = 'willCome';
   else if (isOnGoing(promotion.start_date, promotion.end_date)) status = 'onGoing';
   return (

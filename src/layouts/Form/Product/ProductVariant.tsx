@@ -5,7 +5,8 @@ import {
   SetStateAction,
   Fragment,
 } from 'react';
-import TextInputWithCounter from '../../components/Form/Custom/TextInputWithCounter';
+import TextInputWithCounter from '../../../components/Form/Custom/TextInputWithCounter';
+import { maxVariantItems } from '../../../utils/Values';
 
 type props = {
   titleValidationMsg: any,
@@ -16,6 +17,8 @@ type props = {
   setVariantTitle: Dispatch<SetStateAction<string>>,
   variantItems: string[],
   setVariantItems: Dispatch<SetStateAction<string[]>>,
+  handleAddItem: Function,
+  handleDeleteItem: Function,
 }
 export default function ProductVariant({
   titleValidationMsg,
@@ -26,13 +29,9 @@ export default function ProductVariant({
   variantItems,
   setVariantTitle,
   setVariantItems,
+  handleAddItem,
+  handleDeleteItem,
 }:props) {
-  const handleAddItem = () => {
-    setVariantItems([...variantItems, '']);
-  };
-  const handleDeleteItem = (inputIndex: number) => {
-    setVariantItems((prev) => prev.filter((item, index) => index !== inputIndex));
-  };
   const handleChangeTitle = (
     e: FormEvent<HTMLInputElement> | FormEvent<HTMLTextAreaElement>,
   ) => {
@@ -101,7 +100,7 @@ export default function ProductVariant({
                     validationMsg={itemsValidationMsg}
                     isRequired
                   />
-                  {(index === variantItems.length - 1 && variantItems.length < 3) && (
+                  {(index === variantItems.length - 1 && variantItems.length < maxVariantItems) && (
                   <button
                     type="button"
                     className="btn-dashed"

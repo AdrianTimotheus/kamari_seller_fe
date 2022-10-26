@@ -58,8 +58,9 @@ export default function ImageUploader({
       .catch((err) => {
         Toast.fire({
           icon: 'error',
-          title: err.message,
+          title: 'Gagal mengunggah foto',
         });
+        throw new Error(err);
       })
       .finally(() => {
         setIsLoading(false);

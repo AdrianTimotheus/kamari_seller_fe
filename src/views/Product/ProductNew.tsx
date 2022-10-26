@@ -11,7 +11,6 @@ import ProductOtherForm from '../../layouts/Form/Product/ProductOtherForm';
 import ProductPhotoForm from '../../layouts/Form/Product/ProductPhotoForm';
 import ProductSellingForm from '../../layouts/Form/Product/ProductSellingForm';
 import ProductVariantForm from '../../layouts/Form/Product/ProductVariantForm';
-import productVariantData from '../../models/productVariantData';
 import { axiosPrivate, axiosPublic } from '../../utils/API';
 import { routeProductList } from '../../utils/RouteList';
 import {
@@ -33,6 +32,7 @@ import {
   validateVariantStockItems,
   validateWeight,
 } from '../../utils/FormValidations';
+import { setDocumentTitle } from '../../utils/Utils';
 
 export default function ProductNew() {
   const navigate = useNavigate();
@@ -50,21 +50,18 @@ export default function ProductNew() {
     productIsHazardous: '',
     productThumbnailUrl: '',
   });
-  // const [formProductPhotos, setFormProductPhotos] = useState<string[]>([
-  //   'https://i.ibb.co/MBpGNGp/ab67616d00001e028d7d3584e5220d0cd406eea4.jpg',
-  //   'https://awsimages.detik.net.id/community/media/visual/2021/12/21/raisa_43.png?w=700&q=90',
-  //   'https://www.scienceabc.com/wp-content/uploads/2016/07/Computer-mouse.jpg',
-  // ]);
   const [formProductPhotos, setFormProductPhotos] = useState<string[]>([]);
-  const [formProductVariants, setFormProductVariants] = useState<productVariantData[]>([]);
   const [productSettings, setProductSettings] = useState({
     isMainVariant: false,
     isSubVariant: false,
   });
   const [mainVariantTitle, setMainVariantTitle] = useState<string>('');
   const [subVariantTitle, setSubVariantTitle] = useState<string>('');
-  const [mainVariantItems, setMainVariantItems] = useState<string[]>(['']);
-  const [subVariantItems, setSubVariantItems] = useState<string[]>(['']);
+  const [mainVariantItems, setMainVariantItems] = useState<string[]>([]);
+  const [subVariantItems, setSubVariantItems] = useState<string[]>([]);
+  const [variantPrices, setVariantPrices] = useState<string[]>([]);
+  const [variantStocks, setVariantStocks] = useState<string[]>([]);
+  const [variantPhotos, setVariantPhotos] = useState<string[]>([]);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [categories, setCategories] = useState<any[]>([]);
@@ -90,30 +87,9 @@ export default function ProductNew() {
     variantSubTitle: '',
     variantMainItems: '',
     variantSubItems: '',
-    variantItemsPrice: '',
-    variantItemsStock: '',
   });
-
-  useEffect(() => {
-    const fetchCategories = axiosPublic.get('/categories');
-    const fetchSubCategories = axiosPublic.get('/subcategories');
-    const fetchComplementaryCategories = axiosPublic.get('/complementary');
-    Promise.all([fetchCategories, fetchSubCategories, fetchComplementaryCategories])
-      .then(([categoiesRes, subsRes, complementariesRes]) => {
-        setCategories(categoiesRes.data.categories);
-        setSubCategories(subsRes.data);
-        setComplementaryCategories(complementariesRes.data);
-      })
-      .catch((err) => {
-        Toast.fire({
-          icon: 'error',
-          title: err.message,
-        });
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+  const [validationMsgVariantPrices, setValidationMsgVariantPrices] = useState<string[]>([]);
+  const [validationMsgVariantStocks, setValidationMsgVariantStocks] = useState<string[]>([]);
 
   const handleChangeFormProductInfo = (
     e: FormEvent<HTMLInputElement> | FormEvent<HTMLTextAreaElement>,
@@ -124,15 +100,43 @@ export default function ProductNew() {
   };
 
   const submitNew = () => {
-    const formVariants = productSettings.isMainVariant ? formProductVariants.map((item) => ({
-      main_variant: item.mainVariant,
-      main_variant_item: item.mainVariantItem,
-      sub_variant: item.subVariant,
-      sub_variant_item: item.subVariantItem,
-      stock: parseInt(item.stock, 10),
-      price: parseInt(item.price, 10),
-      pic_url: item.picUrl,
-    })) : [{
+    const tempMainItems:string[] = [];
+    for (let i = 0; i < mainVariantItems.length; i += 1) {
+      if (!productSettings.isSubVariant) {
+        tempMainItems.push(mainVariantItems[i]);
+      } else {
+        for (let j = 0; j < subVariantItems.length; j += 1) {
+          tempMainItems.push(mainVariantItems[i]);
+        }
+      }
+    }
+    const tempSubItems:string[] = [];
+    for (let i = 0; i < mainVariantItems.length; i += 1) {
+      for (let j = 0; j < subVariantItems.length; j += 1) {
+        tempSubItems.push(subVariantItems[j]);
+      }
+    }
+    const tempVariantPhotos:string[] = [];
+    for (let i = 0; i < variantPhotos.length; i += 1) {
+      if (!productSettings.isSubVariant) {
+        tempVariantPhotos.push(variantPhotos[i]);
+      } else {
+        for (let j = 0; j < subVariantItems.length; j += 1) {
+          tempVariantPhotos.push(variantPhotos[i]);
+        }
+      }
+    }
+    const tempVariants:any[] = variantPrices
+      .map((mapItem, index) => ({
+        main_variant: mainVariantTitle,
+        main_variant_item: tempMainItems[index] || '',
+        sub_variant: subVariantTitle,
+        sub_variant_item: tempSubItems[index] || '',
+        price: parseInt(variantPrices[index], 10),
+        stock: parseInt(variantStocks[index], 10),
+        pic_url: tempVariantPhotos[index] || '',
+      }));
+    const formVariants = productSettings.isMainVariant ? tempVariants : [{
       main_variant: '',
       main_variant_item: '',
       sub_variant: '',
@@ -152,9 +156,9 @@ export default function ProductNew() {
       seller_category_id: 3,
       category_id: parseInt(formProductInfo.productCategoryId, 10),
       subcategory_id: parseInt(formProductInfo.productSubCategoryId, 10),
-      complementary_category_id: parseInt(formProductInfo.productComplementaryCategoryId, 10),
       thumbnail_url: formProductInfo.productThumbnailUrl,
       product_variants: formVariants,
+      ...(formProductInfo.productComplementaryCategoryId !== '' && { complementary_category_id: parseInt(formProductInfo.productComplementaryCategoryId, 10) }),
     })
       .then(() => {
         Toast.fire({
@@ -166,8 +170,9 @@ export default function ProductNew() {
       .catch((err) => {
         Toast.fire({
           icon: 'error',
-          title: err.message,
+          title: 'Gagal membuat produk',
         });
+        throw new Error(err);
       });
   };
 
@@ -201,19 +206,15 @@ export default function ProductNew() {
     let variantSubTitleValidation = '';
     let variantMainItemsValidation = '';
     let variantSubItemsValidation = '';
-    let variantItemsPriceValidation = '';
-    let variantItemsStockValidation = '';
+    let variantPricesValidations:string[] = [];
+    let variantStocksValidations:string[] = [];
     if (productSettings.isMainVariant) {
       variantMainTitleValidation = validateMainVariantTitle(mainVariantTitle);
       variantSubTitleValidation = validateSubVariantTitle(mainVariantTitle, subVariantTitle);
       variantMainItemsValidation = validateVariantItems(mainVariantItems);
       variantSubItemsValidation = validateVariantItems(subVariantItems);
-      variantItemsPriceValidation = validateVariantPriceItems(
-        formProductVariants.map((item) => item.price),
-      );
-      variantItemsStockValidation = validateVariantStockItems(
-        formProductVariants.map((item) => item.stock),
-      );
+      variantPricesValidations = variantPrices.map((item) => validateVariantPriceItems(item));
+      variantStocksValidations = variantStocks.map((item) => validateVariantStockItems(item));
     }
 
     setValidationMsg({
@@ -234,9 +235,9 @@ export default function ProductNew() {
       variantSubTitle: variantSubTitleValidation,
       variantMainItems: variantMainItemsValidation,
       variantSubItems: variantSubItemsValidation,
-      variantItemsPrice: variantItemsPriceValidation,
-      variantItemsStock: variantItemsStockValidation,
     });
+    setValidationMsgVariantPrices(variantPricesValidations);
+    setValidationMsgVariantStocks(variantStocksValidations);
 
     if (nameValidation !== ''
     || descValidation !== ''
@@ -254,9 +255,13 @@ export default function ProductNew() {
     || variantSubTitleValidation !== ''
     || variantMainItemsValidation !== ''
     || variantSubItemsValidation !== ''
-    || variantItemsPriceValidation !== ''
-    || variantItemsStockValidation !== ''
     ) return false;
+    for (let i = 0; i < variantPricesValidations.length; i += 1) {
+      if (variantPricesValidations[i] !== '') return false;
+    }
+    for (let i = 0; i < variantStocksValidations.length; i += 1) {
+      if (variantStocksValidations[i] !== '') return false;
+    }
 
     return true;
   };
@@ -265,6 +270,29 @@ export default function ProductNew() {
     e.preventDefault();
     if (validateFormNew()) submitNew();
   };
+
+  useEffect(() => {
+    setDocumentTitle('Buat Produk');
+    const fetchCategories = axiosPublic.get('/categories?page=1&limit=10000');
+    const fetchSubCategories = axiosPublic.get('/sub-categories?page=1&limit=10000');
+    const fetchComplementaryCategories = axiosPublic.get('/complementary-categories?page=1&limit=10000');
+    Promise.all([fetchCategories, fetchSubCategories, fetchComplementaryCategories])
+      .then(([categoiesRes, subsRes, complementariesRes]) => {
+        setCategories(categoiesRes.data.categories);
+        setSubCategories(subsRes.data.subcategories);
+        setComplementaryCategories(complementariesRes.data.complementary_categories);
+      })
+      .catch((err) => {
+        Toast.fire({
+          icon: 'error',
+          title: 'Terdapat masalah koneksi',
+        });
+        throw new Error(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
 
   return (
     <div className="page-layout">
@@ -296,60 +324,85 @@ export default function ProductNew() {
           </div>
           <div className="page-content">
             <SectionTitle text="Variasi Produk" />
-            <ProductVariantForm
-              validationMsg={validationMsg}
-              productSettings={productSettings}
-              setProductSettings={setProductSettings}
-              mainVariantTitle={mainVariantTitle}
-              setMainVariantTitle={setMainVariantTitle}
-              subVariantTitle={subVariantTitle}
-              setSubVariantTitle={setSubVariantTitle}
-              mainVariantItems={mainVariantItems}
-              setMainVariantItems={setMainVariantItems}
-              subVariantItems={subVariantItems}
-              setSubVariantItems={setSubVariantItems}
-            />
+            {isLoading ? (
+              <FormSkeleton />
+            ) : (
+              <ProductVariantForm
+                validationMsg={validationMsg}
+                productSettings={productSettings}
+                setProductSettings={setProductSettings}
+                mainVariantTitle={mainVariantTitle}
+                setMainVariantTitle={setMainVariantTitle}
+                subVariantTitle={subVariantTitle}
+                setSubVariantTitle={setSubVariantTitle}
+                mainVariantItems={mainVariantItems}
+                setMainVariantItems={setMainVariantItems}
+                subVariantItems={subVariantItems}
+                setSubVariantItems={setSubVariantItems}
+                variantPrices={variantPrices}
+                setVariantPrices={setVariantPrices}
+                variantStocks={variantStocks}
+                setVariantStocks={setVariantStocks}
+                variantPhotos={variantPhotos}
+                setVariantPhotos={setVariantPhotos}
+              />
+            )}
           </div>
           <div className="page-content">
             <SectionTitle text="Informasi Penjualan" />
-            <ProductSellingForm
-              validationMsg={validationMsg}
-              formProductInfo={formProductInfo}
-              handleChangeFormProductInfo={handleChangeFormProductInfo}
-              productSettings={productSettings}
-              mainVariantTitle={mainVariantTitle}
-              subVariantTitle={subVariantTitle}
-              mainVariantItems={mainVariantItems}
-              subVariantItems={subVariantItems}
-              formProductVariants={formProductVariants}
-              setFormProductVariants={setFormProductVariants}
-            />
+            {isLoading ? (
+              <FormSkeleton />
+            ) : (
+              <ProductSellingForm
+                validationMsg={validationMsg}
+                formProductInfo={formProductInfo}
+                handleChangeFormProductInfo={handleChangeFormProductInfo}
+                productSettings={productSettings}
+                mainVariantTitle={mainVariantTitle}
+                subVariantTitle={subVariantTitle}
+                mainVariantItems={mainVariantItems}
+                subVariantItems={subVariantItems}
+                variantPrices={variantPrices}
+                setVariantPrices={setVariantPrices}
+                validationMsgVariantPrices={validationMsgVariantPrices}
+                variantStocks={variantStocks}
+                setVariantStocks={setVariantStocks}
+                validationMsgVariantStocks={validationMsgVariantStocks}
+              />
+            )}
           </div>
           <div className="page-content">
             <SectionTitle text="Foto Produk" />
-            <ProductPhotoForm
-              validationMsg={validationMsg}
-              formProductInfo={formProductInfo}
-              setFormProductInfo={setFormProductInfo}
-              formProductPhotos={formProductPhotos}
-              setFormProductPhotos={setFormProductPhotos}
-              mainVariantItems={mainVariantItems}
-              subVariantItems={subVariantItems}
-              formProductVariants={formProductVariants}
-              setFormProductVariants={setFormProductVariants}
-              productSettings={productSettings}
-            />
+            {isLoading ? (
+              <FormSkeleton />
+            ) : (
+              <ProductPhotoForm
+                productSettings={productSettings}
+                validationMsg={validationMsg}
+                formProductInfo={formProductInfo}
+                setFormProductInfo={setFormProductInfo}
+                formProductPhotos={formProductPhotos}
+                setFormProductPhotos={setFormProductPhotos}
+                mainVariantItems={mainVariantItems}
+                variantPhotos={variantPhotos}
+                setVariantPhotos={setVariantPhotos}
+              />
+            )}
           </div>
           <div className="page-content">
             <SectionTitle text="Pengiriman" />
           </div>
           <div className="page-content">
             <SectionTitle text="Lainnya" />
-            <ProductOtherForm
-              validationMsg={validationMsg}
-              formProductInfo={formProductInfo}
-              handleChangeFormProductInfo={handleChangeFormProductInfo}
-            />
+            {isLoading ? (
+              <FormSkeleton />
+            ) : (
+              <ProductOtherForm
+                validationMsg={validationMsg}
+                formProductInfo={formProductInfo}
+                handleChangeFormProductInfo={handleChangeFormProductInfo}
+              />
+            )}
           </div>
           <div className="page-content d-flex justify-content-end">
             <SubmitButton text="Simpan Produk" />

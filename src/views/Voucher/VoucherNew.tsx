@@ -11,7 +11,7 @@ import { selectUser } from '../../store/userSlice';
 import { axiosPrivate } from '../../utils/API';
 import { convertDateToUnix } from '../../utils/Date';
 import { routeVoucherList } from '../../utils/RouteList';
-import { parseVoucherCode } from '../../utils/Utils';
+import { parseVoucherCode, setDocumentTitle } from '../../utils/Utils';
 import {
   validateVoucherTitle,
   validateVoucherCode,
@@ -86,8 +86,9 @@ export default function VoucherNew() {
         } else {
           Toast.fire({
             icon: 'error',
-            title: err.message,
+            title: 'Gagal membuat voucher',
           });
+          throw new Error(err);
         }
       });
   };
@@ -155,6 +156,7 @@ export default function VoucherNew() {
   }, [searchParams]);
 
   useEffect(() => {
+    setDocumentTitle('Buat Voucher');
     setPrefix(user.username.slice(0, 4).toUpperCase());
   }, [user]);
 

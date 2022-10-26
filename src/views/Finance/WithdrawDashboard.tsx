@@ -1,11 +1,15 @@
+import { useEffect } from 'react';
 import '../../assets/style/finance.css';
 import PageBreadcrumb from '../../components/Text/PageBreadcrumb';
 import PageTitle from '../../components/Text/PageTitle';
 import SectionTitle from '../../components/Text/SectionTitle';
 import MyWallet from '../../layouts/Finance/MyWallet';
-import { formatPrice } from '../../utils/Utils';
+import { formatPrice, setDocumentTitle } from '../../utils/Utils';
 
 export default function WithdrawDashboard() {
+  useEffect(() => {
+    setDocumentTitle('Penarikan Dana');
+  }, []);
   return (
     <div className="page-layout">
       <div>

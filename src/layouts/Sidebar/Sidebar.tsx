@@ -1,13 +1,14 @@
 /* eslint-disable react/no-array-index-key */
 import { useMediaQuery } from '@mui/material';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import KamariSeller from '../../assets/png/Kamari-Seller.png';
 import {
   routeCategoryList,
+  routeCourier,
   routeDashboard,
+  routeOrder,
   routeProductList,
-  routeProductNew,
   routeProfile,
   routePromotionList,
   routeVoucherList,
@@ -21,7 +22,6 @@ type props = {
 
 export default function Sidebar({ showSidebar, setShowSidebar }:props) {
   const viewDesktop = useMediaQuery('(min-width: 768px)');
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const menu = [
     {
       text: 'Dashboard',
@@ -38,16 +38,16 @@ export default function Sidebar({ showSidebar, setShowSidebar }:props) {
       ],
     },
     {
-      text: 'Pengiriman',
+      text: 'Pesanan',
       icon: 'bi-box-seam',
       children: [
         {
-          text: 'Pengiriman',
-          url: '/shipment/list',
+          text: 'Pesanan',
+          url: routeOrder,
         },
         {
-          text: 'Pengaturan Pengiriman',
-          url: '/shipment/setting',
+          text: 'Pengaturan Kurir',
+          url: routeCourier,
         },
       ],
     },
@@ -56,12 +56,8 @@ export default function Sidebar({ showSidebar, setShowSidebar }:props) {
       icon: 'bi-bag',
       children: [
         {
-          text: 'Produk Saya',
+          text: 'Produk',
           url: routeProductList,
-        },
-        {
-          text: 'Tambah Produk',
-          url: routeProductNew,
         },
         {
           text: 'Kategori Toko',
@@ -88,7 +84,7 @@ export default function Sidebar({ showSidebar, setShowSidebar }:props) {
       icon: 'bi-wallet2',
       children: [
         {
-          text: 'Penarikan Uang',
+          text: 'Penarikan Dana',
           url: routeWithdraw,
         },
       ],
@@ -124,13 +120,12 @@ export default function Sidebar({ showSidebar, setShowSidebar }:props) {
             <div key={`sidebar-menu-${item.text}`}>
               <button
                 type="button"
+                className="sidebar-menu-item"
                 data-bs-toggle="collapse"
                 data-bs-target={`#collapseMenu${index}`}
                 aria-expanded="false"
                 aria-controls={`collapseMenu${index}`}
                 key={`menu-${index}`}
-                className={`sidebar-menu-item ${selectedIndex === index ? 'active' : ''}`}
-                onClick={() => setSelectedIndex(index)}
               >
                 <div><i className={`bi ${item.icon}`} /></div>
                 <div><span>{item.text}</span></div>

@@ -25,7 +25,6 @@ export default function ProductOtherForm({
             fieldName="productMinOrder"
             handleChange={handleChangeFormProductInfo}
             min={1}
-            max={1000000}
             validationMsg={validationMsg.productMinOrder}
             isRequired
           />
@@ -43,7 +42,6 @@ export default function ProductOtherForm({
             fieldName="productMaxOrder"
             handleChange={handleChangeFormProductInfo}
             min={1}
-            max={1000000}
             validationMsg={validationMsg.productMaxOrder}
             isRequired
           />
@@ -61,7 +59,6 @@ export default function ProductOtherForm({
             fieldName="productWeight"
             handleChange={handleChangeFormProductInfo}
             min={1}
-            max={1000000}
             validationMsg={validationMsg.productWeight}
             isRequired
           />

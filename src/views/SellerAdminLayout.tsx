@@ -7,7 +7,8 @@ import Sidebar from '../layouts/Sidebar/Sidebar';
 import '../assets/style/seller-layout.css';
 import useAppDispatch from '../hooks/useAppDispatch';
 import { userActions } from '../store/userSlice';
-import { isLoggedIn, getUserFromToken, getToken } from '../utils/Auth';
+import { deleteLogin, isLoggedIn } from '../utils/Auth';
+import { axiosPrivate } from '../utils/API';
 
 export default function SellerAdminLayout() {
   const dispatch = useAppDispatch();
@@ -16,7 +17,21 @@ export default function SellerAdminLayout() {
 
   useEffect(() => {
     if (isLoggedIn()) {
-      dispatch(userActions.setUser(getUserFromToken(getToken())));
+      axiosPrivate.get('/users/seller')
+        .then((res) => {
+          dispatch(userActions.setUser({
+            id: res.data.id,
+            email: res.data.email,
+            username: res.data.username,
+            name: res.data.name,
+            roleId: res.data.role_id,
+            picUrl: res.data.pic_url,
+          }));
+        })
+        .catch(() => {
+          deleteLogin();
+          window.location.href = '/logout';
+        });
     } else {
       window.location.href = '/logout';
     }

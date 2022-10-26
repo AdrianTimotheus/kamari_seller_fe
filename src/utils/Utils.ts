@@ -1,3 +1,5 @@
+import { appName } from './Values';
+
 export const removeDuplicates = (arr:any[]) => arr.reduce((acc, curr) => {
   if (!acc.includes(curr)) acc.push(curr);
   return acc;
@@ -9,3 +11,7 @@ export const formatPrice = (balance: number) => {
 };
 
 export const parseVoucherCode = (code: string) => code.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+
+export const setDocumentTitle = (text: string) => {
+  document.title = `${text} - ${appName}`;
+};

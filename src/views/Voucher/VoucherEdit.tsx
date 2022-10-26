@@ -23,6 +23,7 @@ import {
   validatePercentage,
 } from '../../utils/FormValidations';
 import FormSkeleton from '../../components/Loading/FormSkeleton';
+import { setDocumentTitle } from '../../utils/Utils';
 
 export default function VoucherEdit() {
   const params = useParams();
@@ -84,8 +85,9 @@ export default function VoucherEdit() {
           } else {
             Toast.fire({
               icon: 'error',
-              title: err.message,
+              title: 'Gagal mengedit voucher',
             });
+            throw new Error(err);
           }
         });
     } else {
@@ -145,6 +147,7 @@ export default function VoucherEdit() {
   useEffect(() => {
     if (voucher.id) {
       if (isWillCome(voucher.start_date) || isOnGoing(voucher.start_date, voucher.end_date)) {
+        setDocumentTitle(`Edit voucher ${voucher.title}`);
         setForm({
           title: voucher.title,
           promo_type_id: voucher.promo_type_id.toString(),

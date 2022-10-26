@@ -1,14 +1,13 @@
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import '../../assets/style/product.css';
-import productData from '../../models/productData';
 import { axiosPrivate } from '../../utils/API';
 import { formatPrice } from '../../utils/Utils';
 import Toast from '../Interaction/Toast';
 
 type props = {
-  product: productData,
+  product: any,
 }
 export default function ProductItem({ product }:props) {
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
@@ -36,12 +35,21 @@ export default function ProductItem({ product }:props) {
           .catch((err) => {
             Toast.fire({
               icon: 'error',
-              title: err.message,
+              title: 'Gagal menghapus produk',
             });
+            throw new Error(err);
           });
       }
     });
   };
+
+  const priceList = product.product_variants
+    .map((item:any) => item.price)
+    .sort((a: number, b: number) => a - b);
+  const stockList = product.product_variants
+    .map((item:any) => item.stock)
+    .sort((a: number, b: number) => a - b);
+
   if (isDeleted) return <div />;
   return (
     <tr className="product-item">
@@ -50,18 +58,48 @@ export default function ProductItem({ product }:props) {
           <img src={product.thumbnail_url} alt={product.title} />
         </div>
         <div>
-          <span>{product.title}</span>
+          <div>
+            <span>{product.title}</span>
+          </div>
+          {product.product_variants[0].main_variant !== '' && (
+            <div>
+              <span className="badge-blue-smaller">
+                {product.product_variants.length}
+                {' '}
+                variasi
+              </span>
+            </div>
+          )}
         </div>
       </td>
       <td>
-        {formatPrice(product.price)}
+        {formatPrice(priceList[0])}
+        {priceList[0] !== priceList[priceList.length - 1] && (
+          <>
+            {' '}
+            -
+            {' '}
+            {formatPrice(priceList[priceList.length - 1])}
+          </>
+        )}
+      </td>
+      <td>
+        {stockList[0]}
+        {stockList[0] !== stockList[stockList.length - 1] && (
+          <>
+            {' '}
+            -
+            {' '}
+            {stockList[stockList.length - 1]}
+          </>
+        )}
       </td>
       <td>
         {product.item_sold}
       </td>
       <td>
         <div>
-          {/* <Link
+          <Link
             to={`/product/${product.id}`}
             title="Detail"
             className="icon-mini icon-mini-blue"
@@ -75,13 +113,6 @@ export default function ProductItem({ product }:props) {
           >
             <i className="bi bi-pencil" />
           </Link>
-          <button
-            type="button"
-            title="Duplikat"
-            className="icon-mini icon-mini-gray"
-          >
-            <i className="bi bi-files" />
-          </button> */}
           <button
             type="button"
             title="Hapus"

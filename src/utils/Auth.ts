@@ -32,18 +32,6 @@ export const deleteLogin = () => {
   localStorage.removeItem('token');
 };
 
-export const getUserFromToken = (token: string | null) => {
-  const { user } = decodeToken(token);
-  return {
-    id: user.id,
-    email: user.email,
-    username: user.username,
-    name: user.name,
-    roleId: user.role_id,
-    picUrl: user.pic_url,
-  };
-};
-
 export const isLoggedIn = () => {
   const token = getToken();
   const isValid = isTokenValid(token || '');

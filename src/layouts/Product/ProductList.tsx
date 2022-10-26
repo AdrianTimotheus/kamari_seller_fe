@@ -1,12 +1,13 @@
+import { Link } from 'react-router-dom';
 import RowSkeleton from '../../components/Loading/RowSkeleton';
 import Pagination from '../../components/Pagination';
 import ProductItem from '../../components/Product/ProductItem';
 import SectionTitle from '../../components/Text/SectionTitle';
-import productData from '../../models/productData';
+import { routeProductNew } from '../../utils/RouteList';
 import ProductSearch from './ProductSearch';
 
 type props = {
-  products: productData[],
+  products: any[],
   searchOpt: any,
   handleChange: Function,
   changePage: Function,
@@ -26,7 +27,18 @@ export default function ProductList({
 }:props) {
   return (
     <div className="page-content">
-      <SectionTitle text="Daftar Produk" />
+      <div className="d-flex flex-row justify-content-between align-items-center">
+        <div>
+          <SectionTitle text="Daftar Produk" />
+        </div>
+        <Link
+          to={routeProductNew}
+          className="btn btn-secondary"
+        >
+          <i className="bi bi-plus" />
+          Buat
+        </Link>
+      </div>
       <ProductSearch
         searchOpt={searchOpt}
         handleChange={handleChange}
@@ -46,7 +58,8 @@ export default function ProductList({
                 <tr>
                   <th scope="col">Nama Produk</th>
                   <th scope="col">Harga</th>
-                  <th scope="col">Stok / Penjualan</th>
+                  <th scope="col">Stok</th>
+                  <th scope="col">Penjualan</th>
                   <th scope="col">Aksi</th>
                 </tr>
               </thead>

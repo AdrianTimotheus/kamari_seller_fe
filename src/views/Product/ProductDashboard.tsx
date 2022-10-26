@@ -4,16 +4,13 @@ import { useState, FormEvent, useEffect } from 'react';
 import Toast from '../../components/Interaction/Toast';
 import PageBreadcrumb from '../../components/Text/PageBreadcrumb';
 import PageTitle from '../../components/Text/PageTitle';
-import useAppSelector from '../../hooks/useAppSelector';
 import ProductList from '../../layouts/Product/ProductList';
-import productData from '../../models/productData';
-import { selectUser } from '../../store/userSlice';
-import { axiosPublic } from '../../utils/API';
+import { axiosPrivate } from '../../utils/API';
+import { setDocumentTitle } from '../../utils/Utils';
 
 export default function ProductDashboard() {
-  const user = useAppSelector(selectUser);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [products, setProducts] = useState<productData[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [searchOpt, setSearchOpt] = useState({
     keyword: '',
@@ -32,45 +29,40 @@ export default function ProductDashboard() {
     setSearchOpt({ ...searchOpt, [name]: value });
   };
 
-  // useEffect(() => {
-  //   setSearchOpt({ ...searchOpt, page: 1 });
-  // }, [searchOpt.voucherStatus]);
-
   const getProducts = () => {
-    if (user.username) {
-      setIsLoading(true);
-      setProducts([]);
-      let url = `/sellers/${user.username}/products?sort=latest&page=${searchOpt.page}&limit=${parseInt(searchOpt.limit, 10)}`;
-      if (searchOpt.keyword !== '') url += `&search=${searchOpt.keyword}`;
-      axiosPublic.get(url)
-        .then((res) => {
-          if (res.data.products) setProducts(res.data.products);
-          setTotalPage(res.data.total_page);
-        })
-        .catch((err) => {
-          Toast.fire({
-            icon: 'error',
-            title: err.message,
-          });
-        })
-        .finally(() => {
-          setIsLoading(false);
+    setIsLoading(true);
+    setProducts([]);
+    let url = `/sellers/products?sort=latest&page=${searchOpt.page}&limit=${parseInt(searchOpt.limit, 10)}`;
+    if (searchOpt.keyword !== '') url += `&search=${searchOpt.keyword}`;
+    axiosPrivate.get(url)
+      .then((res) => {
+        if (res.data.products) setProducts(res.data.products);
+        setTotalPage(res.data.total_page);
+      })
+      .catch((err) => {
+        Toast.fire({
+          icon: 'error',
+          title: 'Terdapat masalah koneksi',
         });
-    }
+        throw new Error(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
+    setDocumentTitle('Produk');
     getProducts();
   }, [
     searchOpt.page,
     searchOpt.limit,
-    user.username,
   ]);
   return (
     <div className="page-layout">
       <div>
-        <PageTitle text="Produk Saya" />
-        <PageBreadcrumb main="Produk" sub="Produk Saya" />
+        <PageTitle text="Produk" />
+        <PageBreadcrumb main="Produk" sub="Produk" />
       </div>
       <div>
         <ProductList

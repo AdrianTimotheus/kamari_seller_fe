@@ -8,33 +8,30 @@ import {
 } from 'react';
 import ImageUploader from '../../../components/Form/Custom/ImageUploader';
 import ImageUploaderSkeleton from '../../../components/Loading/ImageUploaderSkeleton';
-import productVariantData from '../../../models/productVariantData';
 import { maxProductPhotos } from '../../../utils/Values';
 
 type props = {
+  productSettings: any,
   validationMsg: any,
   formProductInfo: any,
   setFormProductInfo: Dispatch<SetStateAction<any>>,
   formProductPhotos: string[],
   setFormProductPhotos: Dispatch<SetStateAction<string[]>>,
   mainVariantItems: string[],
-  subVariantItems: string[],
-  formProductVariants: productVariantData[]
-  setFormProductVariants: Dispatch<SetStateAction<productVariantData[]>>,
-  productSettings: any,
+  variantPhotos: string[],
+  setVariantPhotos: Dispatch<SetStateAction<string[]>>,
 }
 
 export default function ProductPhotoForm({
+  productSettings,
   validationMsg,
   formProductInfo,
   setFormProductInfo,
   formProductPhotos,
   setFormProductPhotos,
   mainVariantItems,
-  subVariantItems,
-  formProductVariants,
-  setFormProductVariants,
-  productSettings,
+  variantPhotos,
+  setVariantPhotos,
 }:props) {
   const [isProcessing, setIsProcessing] = useState<string>('');
 
@@ -58,89 +55,23 @@ export default function ProductPhotoForm({
   const handleChangeVariantPhoto = (fieldId: string, imgUrl: string) => {
     setIsProcessing('variant-photo');
     const inputIndex = parseInt(fieldId.split('_')[2], 10);
-    if (productSettings.isSubVariant) {
-      setFormProductVariants((prev) => {
-        const temp = prev.map((item, prevIndex) => {
-          if (inputIndex === Math.floor(prevIndex / subVariantItems.length)) {
-            return {
-              mainVariant: item.mainVariant,
-              mainVariantItem: item.mainVariantItem,
-              subVariant: item.subVariant,
-              subVariantItem: item.subVariantItem,
-              price: item.price,
-              stock: item.stock,
-              picUrl: imgUrl,
-            };
-          }
-          return item;
-        });
-        return temp;
-      });
-    } else {
-      setFormProductVariants((prev) => {
-        const temp = prev.map((item, prevIndex) => {
-          if (inputIndex === prevIndex) {
-            return {
-              mainVariant: item.mainVariant,
-              mainVariantItem: item.mainVariantItem,
-              subVariant: item.subVariant,
-              subVariantItem: item.subVariantItem,
-              price: item.price,
-              stock: item.stock,
-              picUrl: imgUrl,
-            };
-          }
-          return item;
-        });
-        return temp;
-      });
-    }
+    setVariantPhotos((prev) => prev.map((item, prevIndex) => {
+      if (inputIndex === prevIndex) return imgUrl;
+      return item;
+    }));
   };
   const handleDeleteVariantPhoto = (fieldId: string) => {
     setIsProcessing('variant-photo');
     const inputIndex = parseInt(fieldId.split('_')[2], 10);
-    if (productSettings.isSubVariant) {
-      setFormProductVariants((prev) => {
-        const temp = prev.map((item, prevIndex) => {
-          if (inputIndex === Math.floor(prevIndex / subVariantItems.length)) {
-            return {
-              mainVariant: item.mainVariant,
-              mainVariantItem: item.mainVariantItem,
-              subVariant: item.subVariant,
-              subVariantItem: item.subVariantItem,
-              price: item.price,
-              stock: item.stock,
-              picUrl: '',
-            };
-          }
-          return item;
-        });
-        return temp;
-      });
-    } else {
-      setFormProductVariants((prev) => {
-        const temp = prev.map((item, prevIndex) => {
-          if (prevIndex === inputIndex) {
-            return {
-              mainVariant: item.mainVariant,
-              mainVariantItem: item.mainVariantItem,
-              subVariant: item.subVariant,
-              subVariantItem: item.subVariantItem,
-              price: item.price,
-              stock: item.stock,
-              picUrl: '',
-            };
-          }
-          return item;
-        });
-        return temp;
-      });
-    }
+    setVariantPhotos((prev) => prev.map((item, prevIndex) => {
+      if (inputIndex === prevIndex) return '';
+      return item;
+    }));
   };
 
   useEffect(() => {
     setIsProcessing('');
-  }, [formProductInfo.productThumbnailUrl, formProductPhotos, formProductVariants]);
+  }, [formProductInfo.productThumbnailUrl, formProductPhotos, variantPhotos]);
 
   return (
     <div className="d-flex flex-column gap-3">
@@ -230,27 +161,17 @@ export default function ProductPhotoForm({
                     ))}
                   </tr>
                   <tr>
-                    {mainVariantItems.map((item, index) => {
-                      let val = '';
-                      if (productSettings.isSubVariant) {
-                        if (formProductVariants[subVariantItems.length * index]) {
-                          val = formProductVariants[subVariantItems.length * index].picUrl;
-                        }
-                      } else if (formProductVariants[index]) {
-                        val = formProductVariants[index].picUrl;
-                      }
-                      return (
-                        <td key={`variant-photo-img-${index}`}>
-                          <ImageUploader
-                            key={`variant_photo_${index}`}
-                            fieldId={`variant_photo_${index}`}
-                            value={val}
-                            handleChange={handleChangeVariantPhoto}
-                            handleDelete={handleDeleteVariantPhoto}
-                          />
-                        </td>
-                      );
-                    })}
+                    {mainVariantItems.map((item, index) => (
+                      <td key={`variant-photo-img-${index}`}>
+                        <ImageUploader
+                          key={`variant_photo_${index}`}
+                          fieldId={`variant_photo_${index}`}
+                          value={variantPhotos[index]}
+                          handleChange={handleChangeVariantPhoto}
+                          handleDelete={handleDeleteVariantPhoto}
+                        />
+                      </td>
+                    ))}
                   </tr>
                 </tbody>
               </table>

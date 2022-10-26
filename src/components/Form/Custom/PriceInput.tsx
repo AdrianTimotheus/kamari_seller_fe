@@ -4,7 +4,7 @@ type props = {
   fieldName: string,
   value: any,
   min: number,
-  max: number,
+  max?: number,
   handleChange: Function,
   validationMsg?: string,
   isRequired?: boolean,
@@ -13,6 +13,7 @@ type props = {
 const defaultProps = {
   validationMsg: '',
   isRequired: false,
+  max: 0,
 };
 
 export default function PriceInput({
@@ -26,9 +27,9 @@ export default function PriceInput({
   isRequired,
 }:props) {
   const dangerClass = validationMsg !== '' ? 'border-danger' : '';
-  const inputProps = isRequired ? {
-    required: true,
-  } : {};
+  let inputProps = {};
+  if (isRequired) inputProps = { ...inputProps, required: true };
+  if (max !== 0) inputProps = { ...inputProps, max };
   return (
     <>
       <div className="input-group w-100">
@@ -40,7 +41,6 @@ export default function PriceInput({
           id={fieldName}
           placeholder={placeholder}
           min={min}
-          max={max}
           onChange={(e) => handleChange(e)}
           value={value}
           {...inputProps}

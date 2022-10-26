@@ -9,7 +9,7 @@ import SectionTitle from '../../components/Text/SectionTitle';
 import { axiosPrivate } from '../../utils/API';
 import { isEnded, parseDate } from '../../utils/Date';
 import { routeVoucherList } from '../../utils/RouteList';
-import { formatPrice } from '../../utils/Utils';
+import { formatPrice, setDocumentTitle } from '../../utils/Utils';
 
 export default function VoucherDetail() {
   const params = useParams();
@@ -22,6 +22,7 @@ export default function VoucherDetail() {
       axiosPrivate.get(`/sellers/vouchers/${params.voucherId}`)
         .then((res) => {
           if (isEnded(res.data.end_date)) {
+            setDocumentTitle(`Detail voucher ${res.data.title}`);
             setVoucher(res.data);
           } else {
             navigate(routeVoucherList);

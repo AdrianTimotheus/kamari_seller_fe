@@ -98,6 +98,13 @@ input[type="checkbox"].checkbox-primary:checked {
   border-color: var(--secondary) !important;
 }
 
+.img-product {
+  width: 100px;
+  aspect-ratio : 1 / 1;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
 @media all and (max-width: 991px) {
   .page__container {
     padding: 1rem !important;

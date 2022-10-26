@@ -29,6 +29,13 @@
   color: var(--grey3) !important;
 }
 
+.badge-blue-smaller {
+  color: rgb(92, 140, 194);
+  background-color: rgb(205, 223, 243);
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.7rem;
+}
 .badge-blue {
   color: rgb(64, 122, 187);
   background-color: rgb(190, 213, 240);

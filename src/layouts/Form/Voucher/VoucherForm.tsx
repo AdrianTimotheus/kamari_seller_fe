@@ -134,7 +134,6 @@ export default function VoucherForm({
                   fieldName="discount_amount"
                   handleChange={handleChange}
                   min={1000}
-                  max={1000000}
                   validationMsg={validationMsg.discount_amount}
                   isRequired
                 />
@@ -164,7 +163,6 @@ export default function VoucherForm({
                   fieldName="stock_left"
                   handleChange={handleChange}
                   min={1}
-                  max={1000000}
                   validationMsg={validationMsg.stock_left}
                   isRequired
                 />
@@ -185,7 +183,6 @@ export default function VoucherForm({
                   fieldName="minimum_payment"
                   handleChange={handleChange}
                   min={0}
-                  max={1000000}
                   validationMsg={validationMsg.minimum_payment}
                   isRequired
                 />

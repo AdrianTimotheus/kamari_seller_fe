@@ -50,8 +50,9 @@ export default function VoucherItem({ voucher }:props) {
           .catch((err) => {
             Toast.fire({
               icon: 'error',
-              title: err.message,
+              title: 'Gagal menghapus voucher',
             });
+            throw new Error(err);
           });
       }
     });

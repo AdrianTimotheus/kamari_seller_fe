@@ -4,10 +4,10 @@ import {
   FormEvent,
   SetStateAction,
   useEffect,
+  useState,
 } from 'react';
 import NumberInput from '../../../components/Form/Basic/NumberInput';
 import PriceInput from '../../../components/Form/Custom/PriceInput';
-import productVariantData from '../../../models/productVariantData';
 
 type props = {
   validationMsg: any,
@@ -18,8 +18,12 @@ type props = {
   subVariantTitle: string,
   mainVariantItems: string[],
   subVariantItems: string[],
-  formProductVariants: productVariantData[]
-  setFormProductVariants: Dispatch<SetStateAction<productVariantData[]>>,
+  variantPrices: string[],
+  setVariantPrices: Dispatch<SetStateAction<string[]>>,
+  validationMsgVariantPrices: string[],
+  variantStocks: string[],
+  setVariantStocks: Dispatch<SetStateAction<string[]>>,
+  validationMsgVariantStocks: string[],
 }
 export default function ProductSellingForm({
   validationMsg,
@@ -30,120 +34,59 @@ export default function ProductSellingForm({
   subVariantTitle,
   mainVariantItems,
   subVariantItems,
-  formProductVariants,
-  setFormProductVariants,
+  variantPrices,
+  setVariantPrices,
+  validationMsgVariantPrices,
+  variantStocks,
+  setVariantStocks,
+  validationMsgVariantStocks,
 }:props) {
-  // fungsi untuk mengisi state formProductVariants dari mainVariantItems (max 3 data)
-  const initVariantsWithMainItems = () => {
-    setFormProductVariants(() => mainVariantItems.map((item) => ({
-      mainVariant: mainVariantTitle,
-      mainVariantItem: item,
-      subVariant: subVariantTitle,
-      subVariantItem: '',
-      price: '',
-      stock: '',
-      picUrl: '',
-    })));
-  };
-
-  useEffect(() => {
-    // apabila perubahan data di mainVariantItems terjadi saat subVariantItems belum diisi
-    if (formProductVariants.length <= mainVariantItems.length) {
-      initVariantsWithMainItems();
-    } else { // apabila merubah mainVariantItems saat subVariantItems sudah diisi
-      setFormProductVariants((prev) => {
-        const temp = prev.map((item, prevIndex) => {
-          if (item.mainVariantItem
-            !== mainVariantItems[Math.floor(prevIndex / subVariantItems.length)]) {
-            return {
-              mainVariant: item.mainVariant,
-              mainVariantItem: mainVariantItems[Math.floor(prevIndex / subVariantItems.length)],
-              subVariant: item.subVariant,
-              subVariantItem: item.subVariantItem,
-              price: item.price,
-              stock: item.stock,
-              picUrl: item.picUrl,
-            };
-          }
-          return item;
-        });
-        return temp;
-      });
-    }
-  }, [mainVariantItems]);
-
-  useEffect(() => {
-    setFormProductVariants(() => {
-      const temp:productVariantData[] = [];
-      mainVariantItems.forEach((main) => {
-        subVariantItems.forEach((sub) => {
-          temp.push({
-            mainVariant: mainVariantTitle,
-            mainVariantItem: main,
-            subVariant: subVariantTitle,
-            subVariantItem: sub,
-            price: '',
-            stock: '',
-            picUrl: '',
-          });
-        });
-      });
-      return temp;
-    });
-  }, [subVariantItems]);
-
-  // apabila user ubah state isSubVariant dari true menjadi false
-  useEffect(() => {
-    if (!productSettings.isSubVariant) initVariantsWithMainItems();
-  }, [productSettings.isSubVariant]);
-
-  // mutate title semua variantdata
-  useEffect(() => {
-    setFormProductVariants((prev) => prev.map((item) => ({
-      mainVariant: mainVariantTitle,
-      mainVariantItem: item.mainVariant,
-      subVariant: subVariantTitle,
-      subVariantItem: item.subVariantItem,
-      price: item.price,
-      stock: item.stock,
-      picUrl: item.picUrl,
-    })));
-  }, [mainVariantTitle, subVariantTitle]);
+  const [tempMainItems, setTempMainItems] = useState<string[]>([]);
+  const [tempSubItems, setTempSubItems] = useState<string[]>([]);
 
   const handleChangeVariantPrice = (e: FormEvent<HTMLInputElement>) => {
     const { name } = e.currentTarget;
     const { value } = e.currentTarget;
     const inputIndex = parseInt(name.split('_')[2], 10);
-    setFormProductVariants((prev) => {
-      const temp = prev.map((item, prevIndex) => {
-        if (inputIndex === prevIndex) {
-          return {
-            ...item,
-            price: value,
-          };
-        }
-        return item;
-      });
-      return temp;
-    });
+    setVariantPrices((prev) => prev.map((item, prevIndex) => {
+      if (inputIndex === prevIndex) return value;
+      return item;
+    }));
   };
   const handleChangeVariantStock = (e: FormEvent<HTMLInputElement>) => {
     const { name } = e.currentTarget;
     const { value } = e.currentTarget;
     const inputIndex = parseInt(name.split('_')[2], 10);
-    setFormProductVariants((prev) => {
-      const temp = prev.map((item, prevIndex) => {
-        if (inputIndex === prevIndex) {
-          return {
-            ...item,
-            stock: value,
-          };
+    setVariantStocks((prev) => prev.map((item, prevIndex) => {
+      if (inputIndex === prevIndex) return value;
+      return item;
+    }));
+  };
+
+  useEffect(() => {
+    setTempMainItems(() => {
+      const temp:string[] = [];
+      for (let i = 0; i < mainVariantItems.length; i += 1) {
+        if (!productSettings.isSubVariant) {
+          temp.push(mainVariantItems[i]);
+        } else {
+          for (let j = 0; j < subVariantItems.length; j += 1) {
+            temp.push(mainVariantItems[i]);
+          }
         }
-        return item;
-      });
+      }
       return temp;
     });
-  };
+    setTempSubItems(() => {
+      const temp:string[] = [];
+      for (let i = 0; i < mainVariantItems.length; i += 1) {
+        for (let j = 0; j < subVariantItems.length; j += 1) {
+          temp.push(subVariantItems[j]);
+        }
+      }
+      return temp;
+    });
+  }, [mainVariantItems, subVariantItems]);
 
   return (
     <div className="d-flex flex-column gap-3">
@@ -161,7 +104,6 @@ export default function ProductSellingForm({
                 fieldName="productPrice"
                 handleChange={handleChangeFormProductInfo}
                 min={1000}
-                max={1000000}
                 validationMsg={validationMsg.productPrice}
                 isRequired
               />
@@ -179,7 +121,6 @@ export default function ProductSellingForm({
                 fieldName="productStock"
                 handleChange={handleChangeFormProductInfo}
                 min={1}
-                max={1000000}
                 validationMsg={validationMsg.productStock}
                 isRequired
               />
@@ -201,37 +142,35 @@ export default function ProductSellingForm({
             </tr>
           </thead>
           <tbody>
-            {formProductVariants.map((item, index) => (
+            {variantPrices.map((item, index) => (
               <tr>
                 <td>
-                  {item.mainVariantItem}
+                  {tempMainItems[index]}
                 </td>
                 {productSettings.isSubVariant && (
                   <td>
-                    {item.subVariantItem}
+                    {tempSubItems[index]}
                   </td>
                 )}
                 <td>
                   <PriceInput
-                    value={item.price}
+                    value={variantPrices[index]}
                     placeholder="Harga"
                     fieldName={`variant_price_${index}`}
                     handleChange={handleChangeVariantPrice}
                     min={1000}
-                    max={1000000}
-                    validationMsg={validationMsg.variantItemsPrice}
+                    validationMsg={validationMsgVariantPrices[index]}
                     isRequired
                   />
                 </td>
                 <td>
                   <NumberInput
-                    value={item.stock}
+                    value={variantStocks[index]}
                     placeholder="Stok"
                     fieldName={`variant_stock_${index}`}
                     handleChange={handleChangeVariantStock}
                     min={0}
-                    max={1000000}
-                    validationMsg={validationMsg.variantItemsStock}
+                    validationMsg={validationMsgVariantStocks[index]}
                     isRequired
                   />
                 </td>

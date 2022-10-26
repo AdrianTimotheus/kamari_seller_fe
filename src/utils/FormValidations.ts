@@ -281,45 +281,22 @@ export const validateVariantItems = (items: string[]) => {
   return msg;
 };
 
-export const validateVariantPriceItems = (items: string[]) => {
-  let msg = '';
+export const validateVariantPriceItems = (price: string) => {
   const re = /^[0-9]+$/;
-  for (let i = 0; i < items.length; i++) {
-    if (items[i] === '') {
-      msg = 'Masukkan harga';
-      break;
-    }
-    if (!re.test(items[i])) {
-      msg = 'Angka tidak valid';
-      break;
-    }
-    const inInt = parseInt(items[i], 10);
-    if (inInt < 1000) {
-      msg = 'Harga tidak boleh kurang dari Rp 1000';
-      break;
-    }
-  }
-  return msg;
+  if (price === '') return 'Masukkan harga';
+  if (!re.test(price)) return 'Angka tidak valid';
+  const inInt = parseInt(price, 10);
+  if (inInt < 1000) return 'Harga tidak boleh kurang dari Rp 1000';
+  return '';
 };
-export const validateVariantStockItems = (items: string[]) => {
-  let msg = '';
+
+export const validateVariantStockItems = (stock: string) => {
   const re = /^[0-9]+$/;
-  for (let i = 0; i < items.length; i++) {
-    if (items[i] === '') {
-      msg = 'Masukkan stok';
-      break;
-    }
-    if (!re.test(items[i])) {
-      msg = 'Angka tidak valid';
-      break;
-    }
-    const inInt = parseInt(items[i], 10);
-    if (inInt < 0) {
-      msg = 'Stok tidak boleh kurang dari 0';
-      break;
-    }
-  }
-  return msg;
+  if (stock === '') return 'Masukkan stok';
+  if (!re.test(stock)) return 'Angka tidak valid';
+  const inInt = parseInt(stock, 10);
+  if (inInt < 0) return 'Stok tidak boleh kurang dari 0';
+  return '';
 };
 
 export const validatePhoto = (text: string) => {
@@ -346,5 +323,16 @@ export const validateMaxItem = (text: string) => {
   }
   const maxItemInt = parseInt(text, 10);
   if (maxItemInt < 1) return 'Tidak boleh kurang dari 1';
+  return '';
+};
+
+export const validateCategoryTitle = (text: string) => {
+  if (text === '') return 'Masukkan nama kategori';
+  if (text.length > 50) return 'Nama kategori maksimal 50 karakter';
+
+  const re = /^[a-zA-Z 0-9]+$/;
+  if (!re.test(text)) {
+    return 'Nama kategori terdiri dari kombinasi huruf kecil, huruf besar dan angka';
+  }
   return '';
 };

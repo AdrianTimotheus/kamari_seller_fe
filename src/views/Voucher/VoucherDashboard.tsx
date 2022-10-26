@@ -7,6 +7,7 @@ import PageTitle from '../../components/Text/PageTitle';
 import VoucherList from '../../layouts/Voucher/VoucherList';
 import voucherData from '../../models/voucherData';
 import { axiosPrivate } from '../../utils/API';
+import { setDocumentTitle } from '../../utils/Utils';
 
 export default function VoucherDashboard() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -48,8 +49,9 @@ export default function VoucherDashboard() {
       .catch((err) => {
         Toast.fire({
           icon: 'error',
-          title: err.message,
+          title: 'Terdapat masalah koneksi',
         });
+        throw new Error(err);
       })
       .finally(() => {
         setIsLoading(false);
@@ -57,6 +59,7 @@ export default function VoucherDashboard() {
   };
 
   useEffect(() => {
+    setDocumentTitle('Voucher Toko');
     getVouchers();
   }, [
     searchOpt.page,

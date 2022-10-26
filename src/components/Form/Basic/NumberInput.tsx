@@ -1,18 +1,19 @@
 /* eslint-disable react/jsx-props-no-spreading */
 type props = {
-    placeholder: string,
-    fieldName: string,
-    value: any,
-    min: number,
-    max: number,
-    handleChange: Function,
-    validationMsg?: string,
-    isRequired?: boolean,
-  }
+  placeholder: string,
+  fieldName: string,
+  value: any,
+  min: number,
+  max?: number,
+  handleChange: Function,
+  validationMsg?: string,
+  isRequired?: boolean,
+}
 
 const defaultProps = {
   validationMsg: '',
   isRequired: false,
+  max: 0,
 };
 
 export default function NumberInput({
@@ -26,9 +27,9 @@ export default function NumberInput({
   isRequired,
 }:props) {
   const dangerClass = validationMsg !== '' ? 'border-danger' : '';
-  const inputProps = isRequired ? {
-    required: true,
-  } : {};
+  let inputProps = {};
+  if (isRequired) inputProps = { ...inputProps, required: true };
+  if (max !== 0) inputProps = { ...inputProps, max };
   return (
     <>
       <input
@@ -38,7 +39,6 @@ export default function NumberInput({
         id={fieldName}
         placeholder={placeholder}
         min={min}
-        max={max}
         onChange={(e) => handleChange(e)}
         value={value}
         {...inputProps}

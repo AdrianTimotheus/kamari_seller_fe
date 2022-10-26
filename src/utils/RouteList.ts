@@ -1,9 +1,13 @@
 export const routeDashboard = '/dashboard';
 export const routeProfile = '/profile';
 
-export const routeProductList = '/product/list';
+export const routeOrder = '/order';
+export const routeCourier = '/courier';
+
+export const routeProductList = '/product';
 export const routeProductNew = '/product/new';
 export const routeCategoryList = '/category';
+export const routeCategoryNew = '/category/new';
 
 export const routeVoucherList = '/voucher';
 export const routeVoucherNew = '/voucher/new';

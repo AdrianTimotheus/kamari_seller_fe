@@ -5,7 +5,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import { Routes, Route } from 'react-router-dom';
 import Dashboard from './views/Dashboard/Dashboard';
-import ProfileDashboard from './views/Dashboard/ProfileDashboard';
+import ProfileDashboard from './views/Profile/ProfileDashboard';
 import ProductDashboard from './views/Product/ProductDashboard';
 import ProductNew from './views/Product/ProductNew';
 import SellerAdminLayout from './views/SellerAdminLayout';

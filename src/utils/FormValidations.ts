@@ -336,3 +336,19 @@ export const validateCategoryTitle = (text: string) => {
   }
   return '';
 };
+
+export const validateMerchantName = (text: string) => {
+  if (text === '') return 'Masukkan nama toko';
+  if (text.length > 25) return 'Nama toko maksimal 25 karakter';
+
+  const re = /^[a-zA-Z 0-9]+$/;
+  if (!re.test(text)) {
+    return 'Nama toko terdiri dari kombinasi huruf kecil, huruf besar dan angka';
+  }
+  return '';
+};
+export const validateMerchantDescription = (text: string) => {
+  if (text === '') return 'Masukkan deskripsi toko';
+  if (text.length > 500) return 'Deskripsi toko maksimal 500 karakter';
+  return '';
+};

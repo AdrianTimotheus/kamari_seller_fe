@@ -23,6 +23,7 @@ import '../../assets/style/promotion.css';
 import promoItemData from '../../models/promoItemData';
 import { convertDateToUnix } from '../../utils/Date';
 import SubmitButton from '../../components/Form/Basic/SubmitButton';
+import { setDocumentTitle } from '../../utils/Utils';
 
 export default function PromotionNew() {
   const [searchParams] = useSearchParams();
@@ -173,6 +174,7 @@ export default function PromotionNew() {
   };
 
   useEffect(() => {
+    setDocumentTitle('Buat Promosi');
     if (searchParams.get('copy')) {
       axiosPrivate.get(`/sellers/promos/${searchParams.get('copy')}`)
         .then((res) => {

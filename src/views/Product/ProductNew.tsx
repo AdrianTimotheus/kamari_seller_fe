@@ -153,11 +153,11 @@ export default function ProductNew() {
       maximum_order: parseInt(formProductInfo.productMaxOrder, 10),
       is_hazardous: formProductInfo.productIsHazardous !== '0',
       weight: parseInt(formProductInfo.productWeight, 10),
-      seller_category_id: 3,
       category_id: parseInt(formProductInfo.productCategoryId, 10),
       subcategory_id: parseInt(formProductInfo.productSubCategoryId, 10),
       thumbnail_url: formProductInfo.productThumbnailUrl,
       product_variants: formVariants,
+      ...(formProductPhotos.length !== 0 && { product_photos: formProductPhotos }),
       ...(formProductInfo.productComplementaryCategoryId !== '' && { complementary_category_id: parseInt(formProductInfo.productComplementaryCategoryId, 10) }),
     })
       .then(() => {

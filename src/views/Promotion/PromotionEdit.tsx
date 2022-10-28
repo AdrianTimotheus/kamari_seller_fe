@@ -27,6 +27,7 @@ import {
   validateMaxItem,
   validatePromoAmount,
 } from '../../utils/FormValidations';
+import { setDocumentTitle } from '../../utils/Utils';
 
 export default function PromotionEdit() {
   const params = useParams();
@@ -248,6 +249,7 @@ export default function PromotionEdit() {
       if ((isWillCome(promotion.start_date) && !promotion.has_ended)
         || (isOnGoing(promotion.start_date, promotion.end_date) && !promotion.has_ended)
       ) {
+        setDocumentTitle(`Edit promosi ${promotion.title}`);
         setFormPromotionInfo({
           title: promotion.title,
           start_date: parseCalendar(promotion.start_date),

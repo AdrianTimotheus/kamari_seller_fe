@@ -8,6 +8,7 @@ import PromotionInfo from '../../layouts/Promotion/PromotionInfo';
 import { axiosPrivate } from '../../utils/API';
 import { isEnded } from '../../utils/Date';
 import { routePromotionList } from '../../utils/RouteList';
+import { setDocumentTitle } from '../../utils/Utils';
 
 export default function PromotionDetail() {
   const params = useParams();
@@ -21,6 +22,7 @@ export default function PromotionDetail() {
       axiosPrivate.get(`/sellers/promos/${params.promotionId}`)
         .then((res) => {
           if (isEnded(res.data.end_date) || res.data.has_ended) {
+            setDocumentTitle(`Detail promosi ${res.data.title}`);
             setPromotion(res.data);
             setPromoItems(res.data.product_promo_items);
           } else {

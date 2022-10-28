@@ -43,16 +43,11 @@ export default function ProductDetailPhoto({
             Foto Tambahan
           </div>
           <div className="col-12 col-lg-9 gap-2 d-flex flex-row flex-wrap">
-            {product.product_photos.map((item:string) => {
-              if (item !== '') {
-                return (
-                  <div>
-                    <img src={item} alt="" className="img-product" />
-                  </div>
-                );
-              }
-              return '';
-            })}
+            {product.product_photos.map((item:any) => (
+              <div>
+                <img src={item.pic_url} alt="" className="img-product" />
+              </div>
+            ))}
           </div>
         </div>
       )}

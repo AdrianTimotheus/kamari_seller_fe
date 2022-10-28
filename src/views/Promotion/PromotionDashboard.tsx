@@ -8,6 +8,7 @@ import PromotionList from '../../layouts/Promotion/PromotionList';
 import promotionData from '../../models/promotionData';
 import { axiosPrivate } from '../../utils/API';
 import '../../assets/style/promotion.css';
+import { setDocumentTitle } from '../../utils/Utils';
 
 export default function PromotionDashboard() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -59,6 +60,7 @@ export default function PromotionDashboard() {
   };
 
   useEffect(() => {
+    setDocumentTitle('Promosi');
     getPromotions();
   }, [
     searchOpt.page,

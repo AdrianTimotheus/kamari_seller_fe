@@ -38,6 +38,7 @@ import { setDocumentTitle } from '../../utils/Utils';
 export default function ProductEdit() {
   const params = useParams();
   const navigate = useNavigate();
+  const [productId, setProductId] = useState<number>();
   const [formProductInfo, setFormProductInfo] = useState({
     productName: '',
     productDescription: '',
@@ -148,18 +149,18 @@ export default function ProductEdit() {
       pic_url: '',
     }];
 
-    axiosPrivate.post('/products', {
+    axiosPrivate.put(`/products/${productId}`, {
       name: formProductInfo.productName,
       description: formProductInfo.productDescription,
       minimum_order: parseInt(formProductInfo.productMinOrder, 10),
       maximum_order: parseInt(formProductInfo.productMaxOrder, 10),
       is_hazardous: formProductInfo.productIsHazardous !== '0',
       weight: parseInt(formProductInfo.productWeight, 10),
-      seller_category_id: 3,
       category_id: parseInt(formProductInfo.productCategoryId, 10),
       subcategory_id: parseInt(formProductInfo.productSubCategoryId, 10),
       thumbnail_url: formProductInfo.productThumbnailUrl,
       product_variants: formVariants,
+      ...(formProductPhotos.length !== 0 && { product_photos: formProductPhotos }),
       ...(formProductInfo.productComplementaryCategoryId !== '' && { complementary_category_id: parseInt(formProductInfo.productComplementaryCategoryId, 10) }),
     })
       .then(() => {
@@ -288,6 +289,7 @@ export default function ProductEdit() {
           setComplementaryCategories(complementariesRes.data.complementary_categories);
 
           const product = productRes.data;
+          setProductId(product.id);
           setFormProductInfo({
             ...formProductInfo,
             productName: product.title,
@@ -303,6 +305,8 @@ export default function ProductEdit() {
             productIsHazardous: product.is_hazardous ? '1' : '0',
             productThumbnailUrl: product.thumbnail_url,
           });
+          setFormProductPhotos(product.product_photos
+            .map((item:any) => item.pic_url));
           setProductSettings({
             ...productSettings,
             isMainVariant: product.product_variants[0].main_variant !== '',

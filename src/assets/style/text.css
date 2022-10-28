@@ -57,3 +57,13 @@
   padding: 0.25rem 0.5rem;
   font-size: 0.75rem;
 }
+
+.text-blue {
+  color: rgb(64, 122, 187);
+}
+.text-yellow {
+  color: var(--secondary);
+}
+.text-purple {
+  color: rgb(160, 97, 197);
+}

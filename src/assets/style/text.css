@@ -16,6 +16,9 @@
 .text-small {
   font-size: 0.9rem;
 }
+.text-mini {
+  font-size: 0.6rem;
+}
 .text-primary-1 {
   color: var(--primary) !important;
 }
@@ -53,6 +56,20 @@
 .badge-gray {
   color: rgb(128, 128, 128);
   background-color: rgb(218, 218, 218);
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+.badge-purple {
+  color: #5b27bc;
+  background-color: #d3c3f1;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+.badge-yellow {
+  color: #d28c29;
+  background-color: #f5debf;
   border-radius: 0.5rem;
   padding: 0.25rem 0.5rem;
   font-size: 0.75rem;

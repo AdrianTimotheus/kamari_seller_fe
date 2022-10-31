@@ -1,11 +1,11 @@
 /* eslint-disable react/no-array-index-key */
 import { useMediaQuery } from '@mui/material';
 import { Dispatch, SetStateAction } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import KamariSeller from '../../assets/png/Kamari-Seller.png';
 import {
   routeCategoryList,
-  routeCourier,
+  // routeCourier,
   routeDashboard,
   routeOrder,
   routeProductList,
@@ -21,6 +21,7 @@ type props = {
 }
 
 export default function Sidebar({ showSidebar, setShowSidebar }:props) {
+  const location = useLocation();
   const viewDesktop = useMediaQuery('(min-width: 768px)');
   const menu = [
     {
@@ -45,10 +46,10 @@ export default function Sidebar({ showSidebar, setShowSidebar }:props) {
           text: 'Pesanan',
           url: routeOrder,
         },
-        {
-          text: 'Pengaturan Kurir',
-          url: routeCourier,
-        },
+        // {
+        //   text: 'Pengaturan Kurir',
+        //   url: routeCourier,
+        // },
       ],
     },
     {
@@ -130,7 +131,11 @@ export default function Sidebar({ showSidebar, setShowSidebar }:props) {
                 <div><i className={`bi ${item.icon}`} /></div>
                 <div><span>{item.text}</span></div>
               </button>
-              <div className="collapse sidebar-menu-item-child" id={`collapseMenu${index}`}>
+              <div
+                className={`collapse sidebar-menu-item-child ${item.children
+                  .map((mapItem) => mapItem.url).includes(location.pathname) && 'show'}`}
+                id={`collapseMenu${index}`}
+              >
                 {item.children.map((child) => (
                   <NavLink
                     key={`sidebar-menu-${item.text}-child-${child.text}`}

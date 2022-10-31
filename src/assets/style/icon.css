@@ -58,3 +58,16 @@
 .icon-mini-red:hover {
   background-color: rgb(218, 181, 181);
 }
+
+.icon-micro {
+  border-radius: 0.5rem;
+  border: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--grey3);
+  text-decoration: none;
+  width: 25px;
+  height: 25px;
+  font-size: 0.8rem;
+}

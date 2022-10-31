@@ -210,11 +210,13 @@ export default function ProductNew() {
     let variantStocksValidations:string[] = [];
     if (productSettings.isMainVariant) {
       variantMainTitleValidation = validateMainVariantTitle(mainVariantTitle);
-      variantSubTitleValidation = validateSubVariantTitle(mainVariantTitle, subVariantTitle);
       variantMainItemsValidation = validateVariantItems(mainVariantItems);
-      variantSubItemsValidation = validateVariantItems(subVariantItems);
       variantPricesValidations = variantPrices.map((item) => validateVariantPriceItems(item));
       variantStocksValidations = variantStocks.map((item) => validateVariantStockItems(item));
+    }
+    if (productSettings.isSubVariant) {
+      variantSubTitleValidation = validateSubVariantTitle(mainVariantTitle, subVariantTitle);
+      variantSubItemsValidation = validateVariantItems(subVariantItems);
     }
 
     setValidationMsg({
@@ -255,20 +257,25 @@ export default function ProductNew() {
     || variantSubTitleValidation !== ''
     || variantMainItemsValidation !== ''
     || variantSubItemsValidation !== ''
-    ) return false;
+    ) {
+      return false;
+    }
     for (let i = 0; i < variantPricesValidations.length; i += 1) {
       if (variantPricesValidations[i] !== '') return false;
     }
     for (let i = 0; i < variantStocksValidations.length; i += 1) {
       if (variantStocksValidations[i] !== '') return false;
     }
-
     return true;
   };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (validateFormNew()) submitNew();
+    if (validateFormNew()) {
+      submitNew();
+    } else {
+      console.log('Gagal di validasi');
+    }
   };
 
   useEffect(() => {
@@ -388,9 +395,6 @@ export default function ProductNew() {
                 setVariantPhotos={setVariantPhotos}
               />
             )}
-          </div>
-          <div className="page-content">
-            <SectionTitle text="Pengiriman" />
           </div>
           <div className="page-content">
             <SectionTitle text="Lainnya" />

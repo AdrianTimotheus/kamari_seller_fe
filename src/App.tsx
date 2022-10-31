@@ -39,10 +39,14 @@ import OrderDashboard from './views/Order/OrderDashboard';
 import PromotionEdit from './views/Promotion/PromotionEdit';
 import OrderDetail from './views/Order/OrderDetail';
 import NotFound from './views/NotFound';
+import Login from './views/Account/Login';
+import Logout from './views/Account/Logout';
 
 function App() {
   return (
     <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/logout" element={<Logout />} />
       <Route path="/" element={<SellerAdminLayout />}>
 
         {/* dashboard */}

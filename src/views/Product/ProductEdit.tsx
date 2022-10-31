@@ -213,11 +213,13 @@ export default function ProductEdit() {
     let variantStocksValidations:string[] = [];
     if (productSettings.isMainVariant) {
       variantMainTitleValidation = validateMainVariantTitle(mainVariantTitle);
-      variantSubTitleValidation = validateSubVariantTitle(mainVariantTitle, subVariantTitle);
       variantMainItemsValidation = validateVariantItems(mainVariantItems);
-      variantSubItemsValidation = validateVariantItems(subVariantItems);
       variantPricesValidations = variantPrices.map((item) => validateVariantPriceItems(item));
       variantStocksValidations = variantStocks.map((item) => validateVariantStockItems(item));
+    }
+    if (productSettings.isSubVariant) {
+      variantSubTitleValidation = validateSubVariantTitle(mainVariantTitle, subVariantTitle);
+      variantSubItemsValidation = validateVariantItems(subVariantItems);
     }
 
     setValidationMsg({
@@ -447,9 +449,6 @@ export default function ProductEdit() {
                 setVariantPhotos={setVariantPhotos}
               />
             )}
-          </div>
-          <div className="page-content">
-            <SectionTitle text="Pengiriman" />
           </div>
           <div className="page-content">
             <SectionTitle text="Lainnya" />

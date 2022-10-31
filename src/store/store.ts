@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
+import googleAuthSlice from './googleAuthSlice';
 import userSlice from './userSlice';
 
 const store = configureStore({
   reducer: {
     user: userSlice.reducer,
+    googleAuth: googleAuthSlice.reducer,
   },
 });
 

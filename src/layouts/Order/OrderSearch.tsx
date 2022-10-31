@@ -1,6 +1,7 @@
 import RadioButtonTab from '../../components/Form/Basic/RadioButtonTab';
 import LimitSelect from '../../components/Form/Custom/LimitSelect';
 import SearchGroup from '../../components/Form/Custom/SearchGroup';
+import { orderStatuses } from '../../utils/Values';
 
 type props = {
   searchOpt: any,
@@ -13,50 +14,19 @@ export default function OrderSearch({
   handleChange,
   getOrders,
 }:props) {
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     getOrders();
   };
-  const statuses = [
-    {
-      content: 'Semua',
-      value: '',
-    },
-    {
-      content: 'Belum Bayar',
-      value: '',
-    },
-    {
-      content: 'Perlu Dikirim',
-      value: '',
-    },
-    {
-      content: 'Dikirim',
-      value: '',
-    },
-    {
-      content: 'Selesai',
-      value: '',
-    },
-    {
-      content: 'Pembatalan',
-      value: '',
-    },
-    {
-      content: 'Pengembalian',
-      value: '',
-    },
-  ];
   return (
     <>
       <div className="d-flex flex-row flex-wrap border-bottom">
-        {statuses.map((item, index) => (
+        {orderStatuses.map((item, index) => (
           <RadioButtonTab
-            key={item.content}
+            key={`${item.id}-${item.name}-${item.text}`}
             fieldId={index}
             fieldName="orderStatus"
-            content={item.content}
-            value={item.value}
+            content={item.text}
+            value={item.name}
             handleChange={handleChange}
             currentValue={searchOpt.orderStatus}
           />
@@ -66,7 +36,7 @@ export default function OrderSearch({
         <SearchGroup
           keyword={searchOpt.keyword}
           fieldName="keyword"
-          placeholder="Cari nama / kode order"
+          placeholder="Cari nomor pesanan"
           handleChange={handleChange}
           handleSubmit={handleSubmit}
         />

@@ -3,11 +3,10 @@ import RowSkeleton from '../../components/Loading/RowSkeleton';
 import OrderItem from '../../components/Order/OrderItem';
 import Pagination from '../../components/Pagination';
 import SectionTitle from '../../components/Text/SectionTitle';
-import orderData from '../../models/orderData';
 import OrderSearch from './OrderSearch';
 
 type props = {
-  orders: orderData[],
+  orders: any[],
   searchOpt: any,
   handleChange: Function,
   changePage: Function,
@@ -41,23 +40,10 @@ export default function OrderList({
         </div>
       ) : (
         <>
-          <div>
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                  <th scope="col">No Pesanan / Nama Pemesan</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Produk</th>
-                  <th scope="col">Total Harga</th>
-                  <th scope="col">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orders.map((order, index) => (
-                  <OrderItem key={`order-item-${index}`} order={order} />
-                ))}
-              </tbody>
-            </table>
+          <div className="d-flex flex-column gap-4">
+            {orders.map((order, index) => (
+              <OrderItem key={`order-item-${index}`} order={order} />
+            ))}
             {orders.length === 0 && 'Tidak ada data'}
           </div>
           {orders.length !== 0 && (

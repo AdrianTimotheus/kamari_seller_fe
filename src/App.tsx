@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './views/Dashboard/Dashboard';
 import ProfileDashboard from './views/Profile/ProfileDashboard';
 import ProductDashboard from './views/Product/ProductDashboard';
@@ -37,6 +37,8 @@ import ProductEdit from './views/Product/ProductEdit';
 import ProductDetail from './views/Product/ProductDetail';
 import OrderDashboard from './views/Order/OrderDashboard';
 import PromotionEdit from './views/Promotion/PromotionEdit';
+import OrderDetail from './views/Order/OrderDetail';
+import NotFound from './views/NotFound';
 
 function App() {
   return (
@@ -44,12 +46,13 @@ function App() {
       <Route path="/" element={<SellerAdminLayout />}>
 
         {/* dashboard */}
-        <Route index element={(<Dashboard />)} />
+        <Route index element={(<Navigate to={routeDashboard} />)} />
         <Route path={routeDashboard} element={(<Dashboard />)} />
         <Route path={routeProfile} element={(<ProfileDashboard />)} />
 
         {/* order */}
         <Route path={routeOrder} element={<OrderDashboard />} />
+        <Route path="order/:orderId" element={<OrderDetail />} />
 
         {/* product */}
         <Route path={routeProductList} element={<ProductDashboard />} />
@@ -73,7 +76,7 @@ function App() {
         <Route path={routeWithdraw} element={<WithdrawDashboard />} />
 
       </Route>
-      <Route path="*" element={<h1>404 Not Found!</h1>} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

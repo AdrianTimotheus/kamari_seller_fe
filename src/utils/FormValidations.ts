@@ -4,7 +4,14 @@ import 'moment/locale/id';
 
 moment.locale('id');
 
+const validateWhiteSpace = (text:string) => {
+  if (text === '') return false;
+  if (text.replace(/\s/g, '') === '') return false;
+  return true;
+};
+
 export const validateEmail = (text:string) => {
+  if (!validateWhiteSpace(text)) return 'Masukkan email';
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!re.test(text)) {
     return 'Masukkan email yang valid';
@@ -13,8 +20,9 @@ export const validateEmail = (text:string) => {
 };
 
 export const validateUsername = (text: string) => {
-  if (text.length < 3) {
-    return 'Username harus lebih dari 3 karakter';
+  if (!validateWhiteSpace(text)) return 'Masukkan username';
+  if (text.length < 4) {
+    return 'Username harus lebih dari 4 karakter';
   }
 
   const re = /^[a-z0-9]+$/;
@@ -26,6 +34,7 @@ export const validateUsername = (text: string) => {
 };
 
 export const validateName = (text:string) => {
+  if (!validateWhiteSpace(text)) return 'Masukkan nama';
   if (text.length < 3) {
     return 'Nama harus lebih dari 3 karakter';
   }
@@ -37,8 +46,12 @@ export const validateName = (text:string) => {
 };
 
 export const validatePhone = (text:string) => {
-  if (text.length < 8) {
-    return 'Nomor telepon harus lebih dari 8 karakter';
+  if (!validateWhiteSpace(text)) return 'Masukkan nomor telepon';
+  if (text.length < 5) {
+    return 'Nomor telepon minimal 5 karakter';
+  }
+  if (text.length > 15) {
+    return 'Nomor telepon maksimal 15 karakter';
   }
   const re = /^[0-9]+$/;
   if (!re.test(text)) {
@@ -48,6 +61,7 @@ export const validatePhone = (text:string) => {
 };
 
 export const validatePassword = (text: string) => {
+  if (!validateWhiteSpace(text)) return 'Masukkan password';
   if (text.length < 8) {
     return 'Password harus lebih dari 8 karakter';
   }
@@ -59,30 +73,32 @@ export const validateGender = (text: string) => {
   return '';
 };
 
-export const validateDob = (text: string) => {
-  if (text === '') {
-    return 'Masukkan tanggal lahir';
-  }
+export const validateDob = (dob: string) => {
+  if (!validateWhiteSpace(dob)) return 'Masukkan tanggal lahir';
+  const theDate = moment(dob);
+  if (moment().isBefore(theDate)) return 'Tanggal lahir tidak valid';
+  if (moment().diff(theDate, 'years') < 13) return 'Usia minimal 13 tahun untuk mendaftar';
+
   return '';
 };
 
 export const validateStartEndDate = (mode: string, start: string, end: string) => {
-  if (start === '') return 'Masukkan tanggal mulai';
-  if (end === '') return 'Masukkan tanggal berakhir';
+  if (!validateWhiteSpace(start)) return 'Masukkan tanggal mulai';
+  if (!validateWhiteSpace(end)) return 'Masukkan tanggal berakhir';
 
   const startDate = moment(start).startOf('day');
   const endDate = moment(end).endOf('day');
 
   if (!startDate.isBefore(endDate)) return 'Tanggal berakhir tidak boleh sebelum tanggal mulai';
   if (mode === 'new') {
-    if (moment().isAfter(startDate)) return 'Tanggal mulai harus sesudah tanggal sekarang';
+    // if (moment().isAfter(startDate)) return 'Tanggal mulai harus sesudah tanggal sekarang';
   }
 
   return '';
 };
 
 export const validateVoucherCode = (text: string) => {
-  if (text === '') return 'Masukkan kode voucher';
+  if (!validateWhiteSpace(text)) return 'Masukkan kode voucher';
   if (text.length > 5) return 'Kode voucher maksimal 5 karakter';
 
   const re = /^[A-Z0-9]+$/;
@@ -93,7 +109,7 @@ export const validateVoucherCode = (text: string) => {
 };
 
 export const validateVoucherTitle = (text: string) => {
-  if (text === '') return 'Masukkan nama voucher';
+  if (!validateWhiteSpace(text)) return 'Masukkan nama voucher';
   if (text.length > 20) return 'Nama voucher maksimal 20 karakter';
 
   const re = /^[a-zA-Z 0-9]+$/;
@@ -104,13 +120,13 @@ export const validateVoucherTitle = (text: string) => {
 };
 
 export const validatePromoType = (text: string) => {
-  if (text === '') return 'Pilih tipe promo';
+  if (!validateWhiteSpace(text)) return 'Pilih tipe promo';
   if (text === '1' || text === '2') return '';
   return 'Tipe promo tidak valid';
 };
 
 export const validatePrice = (text: string, min: number) => {
-  if (text === '') return 'Masukkan nominal';
+  if (!validateWhiteSpace(text)) return 'Masukkan nominal';
   const re = /^[0-9]+$/;
   if (!re.test(text)) {
     return 'Angka tidak valid';
@@ -122,7 +138,7 @@ export const validatePrice = (text: string, min: number) => {
 };
 
 export const validatePromoAmount = (text: string, min: number, normalPrice: number) => {
-  if (text === '') return 'Masukkan nominal';
+  if (!validateWhiteSpace(text)) return 'Masukkan nominal';
   const re = /^[0-9]+$/;
   if (!re.test(text)) {
     return 'Angka tidak valid';
@@ -135,7 +151,7 @@ export const validatePromoAmount = (text: string, min: number, normalPrice: numb
 };
 
 export const validatePercentage = (text: string) => {
-  if (text === '') return 'Masukkan persentase';
+  if (!validateWhiteSpace(text)) return 'Masukkan persentase';
   const re = /^[0-9]+$/;
   if (!re.test(text)) {
     return 'Angka tidak valid';
@@ -148,7 +164,7 @@ export const validatePercentage = (text: string) => {
 };
 
 export const validateStock = (text: string, min: number = 1) => {
-  if (text === '') return 'Masukkan stok';
+  if (!validateWhiteSpace(text)) return 'Masukkan stok';
   const re = /^[0-9]+$/;
   if (!re.test(text)) {
     return 'Angka tidak valid';
@@ -160,7 +176,7 @@ export const validateStock = (text: string, min: number = 1) => {
 };
 
 export const validateMinOrder = (text: string) => {
-  if (text === '') return 'Masukkan minimum order';
+  if (!validateWhiteSpace(text)) return 'Masukkan minimum order';
   const re = /^[0-9]+$/;
   if (!re.test(text)) {
     return 'Angka tidak valid';
@@ -171,7 +187,7 @@ export const validateMinOrder = (text: string) => {
 };
 
 export const validateMaxOrder = (minOrder: string, maxOrder: string) => {
-  if (maxOrder === '') return 'Masukkan minimum order';
+  if (!validateWhiteSpace(maxOrder)) return 'Masukkan minimum order';
   const re = /^[0-9]+$/;
   if (!re.test(maxOrder)) {
     return 'Angka tidak valid';
@@ -184,7 +200,7 @@ export const validateMaxOrder = (minOrder: string, maxOrder: string) => {
 };
 
 export const validateWeight = (text: string) => {
-  if (text === '') return 'Masukkan berat produk';
+  if (!validateWhiteSpace(text)) return 'Masukkan berat produk';
   const re = /^[0-9]+$/;
   if (!re.test(text)) {
     return 'Angka tidak valid';
@@ -200,7 +216,7 @@ export const validateIsHazardous = (text: string) => {
 };
 
 export const validateProductName = (text: string) => {
-  if (text === '') return 'Masukkan nama produk';
+  if (!validateWhiteSpace(text)) return 'Masukkan nama produk';
   if (text.length > 255) return 'Nama produk maksimal 255 karakter';
 
   const re = /^[a-zA-Z 0-9]+$/;
@@ -211,34 +227,34 @@ export const validateProductName = (text: string) => {
 };
 
 export const validateProductDesc = (text: string) => {
-  if (text === '') return 'Masukkan deskripsi produk';
+  if (!validateWhiteSpace(text)) return 'Masukkan deskripsi produk';
   if (text.length > 3000) return 'Nama produk maksimal 3000 karakter';
   return '';
 };
 
 export const validateCategory = (text: string, list: {id: number}[]) => {
-  if (text === '') return 'Pilih kategori';
+  if (!validateWhiteSpace(text)) return 'Pilih kategori';
   const listArr = list.map((item) => item.id);
   if (!listArr.includes(parseInt(text, 10))) return 'Kategori tidak valid';
   return '';
 };
 
 export const validateSubCategory = (text: string, list: {id: number}[]) => {
-  if (text === '') return 'Pilih sub kategori';
+  if (!validateWhiteSpace(text)) return 'Pilih sub kategori';
   const listArr = list.map((item) => item.id);
   if (!listArr.includes(parseInt(text, 10))) return 'Sub kategori tidak valid';
   return '';
 };
 
 export const validateComplementarytegory = (text: string, list: {id: number}[]) => {
-  if (text === '') return 'Pilih sub kategori pelengkap';
+  if (!validateWhiteSpace(text)) return 'Pilih sub kategori pelengkap';
   const listArr = list.map((item) => item.id);
   if (!listArr.includes(parseInt(text, 10))) return 'Sub kategori pelengkap tidak valid';
   return '';
 };
 
 export const validateMainVariantTitle = (mainTitle: string) => {
-  if (mainTitle === '') return 'Masukkan nama variasi 1';
+  if (!validateWhiteSpace(mainTitle)) return 'Masukkan nama variasi 1';
   const re = /^[a-zA-Z 0-9]+$/;
   if (!re.test(mainTitle)) {
     return 'Nama variasi terdiri dari kombinasi huruf kecil, huruf besar dan angka';
@@ -247,7 +263,7 @@ export const validateMainVariantTitle = (mainTitle: string) => {
   return '';
 };
 export const validateSubVariantTitle = (mainTitle: string, subTitle: string) => {
-  if (subTitle === '') return 'Masukkan nama variasi 2';
+  if (!validateWhiteSpace(subTitle)) return 'Masukkan nama variasi 2';
   const re = /^[a-zA-Z 0-9]+$/;
   if (!re.test(subTitle)) {
     return 'Nama variasi terdiri dari kombinasi huruf kecil, huruf besar dan angka';
@@ -261,7 +277,7 @@ export const validateVariantItems = (items: string[]) => {
   let msg = '';
   const re = /^[a-zA-Z 0-9]+$/;
   for (let i = 0; i < items.length; i++) {
-    if (items[i] === '') {
+    if (!validateWhiteSpace(items[i])) {
       msg = 'Masukkan pilihan variasi';
       break;
     }
@@ -283,7 +299,7 @@ export const validateVariantItems = (items: string[]) => {
 
 export const validateVariantPriceItems = (price: string) => {
   const re = /^[0-9]+$/;
-  if (price === '') return 'Masukkan harga';
+  if (!validateWhiteSpace(price)) return 'Masukkan harga';
   if (!re.test(price)) return 'Angka tidak valid';
   const inInt = parseInt(price, 10);
   if (inInt < 1000) return 'Harga tidak boleh kurang dari Rp 1000';
@@ -292,7 +308,7 @@ export const validateVariantPriceItems = (price: string) => {
 
 export const validateVariantStockItems = (stock: string) => {
   const re = /^[0-9]+$/;
-  if (stock === '') return 'Masukkan stok';
+  if (!validateWhiteSpace(stock)) return 'Masukkan stok';
   if (!re.test(stock)) return 'Angka tidak valid';
   const inInt = parseInt(stock, 10);
   if (inInt < 0) return 'Stok tidak boleh kurang dari 0';
@@ -300,12 +316,12 @@ export const validateVariantStockItems = (stock: string) => {
 };
 
 export const validatePhoto = (text: string) => {
-  if (text === '') return 'Upload foto';
+  if (!validateWhiteSpace(text)) return 'Upload foto';
   return '';
 };
 
 export const validatePromotionTitle = (text: string) => {
-  if (text === '') return 'Masukkan nama promosi';
+  if (!validateWhiteSpace(text)) return 'Masukkan nama promosi';
   if (text.length > 50) return 'Nama promosi maksimal 50 karakter';
 
   const re = /^[a-zA-Z 0-9]+$/;
@@ -316,7 +332,7 @@ export const validatePromotionTitle = (text: string) => {
 };
 
 export const validateMaxItem = (text: string) => {
-  if (text === '') return 'Masukkan batas pembelian';
+  if (!validateWhiteSpace(text)) return 'Masukkan batas pembelian';
   const re = /^[0-9]+$/;
   if (!re.test(text)) {
     return 'Angka tidak valid';
@@ -327,7 +343,7 @@ export const validateMaxItem = (text: string) => {
 };
 
 export const validateCategoryTitle = (text: string) => {
-  if (text === '') return 'Masukkan nama kategori';
+  if (!validateWhiteSpace(text)) return 'Masukkan nama kategori';
   if (text.length > 50) return 'Nama kategori maksimal 50 karakter';
 
   const re = /^[a-zA-Z 0-9]+$/;
@@ -338,7 +354,7 @@ export const validateCategoryTitle = (text: string) => {
 };
 
 export const validateMerchantName = (text: string) => {
-  if (text === '') return 'Masukkan nama toko';
+  if (!validateWhiteSpace(text)) return 'Masukkan nama toko';
   if (text.length > 25) return 'Nama toko maksimal 25 karakter';
 
   const re = /^[a-zA-Z 0-9]+$/;
@@ -348,7 +364,7 @@ export const validateMerchantName = (text: string) => {
   return '';
 };
 export const validateMerchantDescription = (text: string) => {
-  if (text === '') return 'Masukkan deskripsi toko';
+  if (!validateWhiteSpace(text)) return 'Masukkan deskripsi toko';
   if (text.length > 500) return 'Deskripsi toko maksimal 500 karakter';
   return '';
 };

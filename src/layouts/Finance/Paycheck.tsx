@@ -60,7 +60,7 @@ export default function Paycheck({
           )}
         </div>
         <div>
-          {income !== 0 && (
+          {(income !== 0 && !isLoading) && (
             <button
               type="button"
               className="btn btn-secondary d-flex flex-row gap-1"

@@ -71,7 +71,7 @@ p {
   padding: 1.8rem;
   background-color: white;
   border-radius: 0.75rem;
-  box-shadow: 0 0.75rem 1.5rem rgb(18 38 63 / 3%)
+  box-shadow: 0 0.75rem 1.5rem rgb(18 38 63 / 3%);
 }
 
 .overflow-content {
@@ -103,6 +103,21 @@ input[type="checkbox"].checkbox-primary:checked {
   aspect-ratio : 1 / 1;
   object-fit: cover;
   border-radius: 0.5rem;
+}
+
+.no-route-page {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+.no-route-page > h4 {
+  color: #707070;
+}
+.no-route-page > span {
+  color: #959595;
 }
 
 @media all and (max-width: 991px) {

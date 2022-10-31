@@ -86,6 +86,10 @@
   width: 100% !important;
 }
 
+.btn-detail {
+  
+}
+
 @media all and (max-width: 767px) {
   .search-group {
     width: 100% !important;

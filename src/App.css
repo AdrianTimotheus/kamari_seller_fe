@@ -131,6 +131,13 @@ input[type="checkbox"].checkbox-primary:checked {
   }
 }
 
+.account__form-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
 @media all and (max-width: 767px) {
   .page__container {
     padding: 0.75rem !important;

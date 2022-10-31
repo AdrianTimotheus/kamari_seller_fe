@@ -14,8 +14,6 @@ import VoucherDetail from './views/Voucher/VoucherDetail';
 import VoucherEdit from './views/Voucher/VoucherEdit';
 import VoucherNew from './views/Voucher/VoucherNew';
 import {
-  // routeCategoryList,
-  // routeCategoryNew,
   routeDashboard,
   routeOrder,
   routeProductList,
@@ -25,13 +23,14 @@ import {
   routePromotionNew,
   routeVoucherList,
   routeVoucherNew,
-  routeWithdraw, routeSellerCategories, routeSellerCategoriesNew,
+  routeWithdraw,
+  routeSellerCategories,
+  routeSellerCategoriesNew,
 } from './utils/RouteList';
 import WithdrawDashboard from './views/Finance/WithdrawDashboard';
 import PromotionDashboard from './views/Promotion/PromotionDashboard';
 import PromotionNew from './views/Promotion/PromotionNew';
 import PromotionDetail from './views/Promotion/PromotionDetail';
-// import CategoryDashboard from './views/Category/CategoryDashboard';
 import SellerCategories from './views/Category/SellerCategoryDashboard';
 import ProductEdit from './views/Product/ProductEdit';
 import ProductDetail from './views/Product/ProductDetail';
@@ -65,8 +64,6 @@ function App() {
         <Route path={routeProductNew} element={<ProductNew />} />
         <Route path="/product/:productId" element={<ProductDetail />} />
         <Route path="/product/:productId/edit" element={<ProductEdit />} />
-        {/* <Route path={routeCategoryList} element={<CategoryDashboard />} /> */}
-        {/* <Route path={routeCategoryNew} element={<CategoryNew />} /> */}
 
         {/* voucher and promotion */}
         <Route path={routeVoucherList} element={<VoucherDashboard />} />

@@ -1,22 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, FormEvent, useEffect } from 'react';
+import { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Toast from '../../components/Interaction/Toast';
 import PageBreadcrumb from '../../components/Text/PageBreadcrumb';
 import PageTitle from '../../components/Text/PageTitle';
 import SectionTitle from '../../components/Text/SectionTitle';
 import { axiosPrivate } from '../../utils/API';
-import { routeCategoryList } from '../../utils/RouteList';
+import { routeSellerCategories } from '../../utils/RouteList';
 import {
-  validateCategoryTitle,
+  validateVoucherTitle,
 } from '../../utils/FormValidations';
+import SellerCategoriesInfoForm from '../../layouts/Form/Category/SellerCategoriesInfoForm';
 import SubmitButton from '../../components/Form/Basic/SubmitButton';
-import CategoryFormInfo from '../../layouts/Form/Category/CategoryFormInfo';
-import { setDocumentTitle } from '../../utils/Utils';
 
-export default function CategoryNew() {
+export default function VoucherNew() {
   const navigate = useNavigate();
-  const [formCategoryInfo, setFormCategoryInfo] = useState({
+  const [form, setForm] = useState({
     title: '',
   });
   const [validationMsg, setValidationMsg] = useState({
@@ -27,19 +26,19 @@ export default function CategoryNew() {
   ) => {
     const { name } = e.currentTarget;
     const { value } = e.currentTarget;
-    setFormCategoryInfo({ ...formCategoryInfo, [name]: value });
+    setForm({ ...form, [name]: value });
   };
 
   const submitNew = () => {
     axiosPrivate.post('/sellers/categories', {
-      name: formCategoryInfo.title,
+      name: form.title,
     })
       .then(() => {
         Toast.fire({
           icon: 'success',
           title: 'Kategori berhasil dibuat',
         });
-        navigate(routeCategoryList);
+        navigate(routeSellerCategories);
       })
       .catch((err) => {
         Toast.fire({
@@ -47,53 +46,46 @@ export default function CategoryNew() {
           title: 'Gagal membuat kategori',
         });
         throw new Error(err);
+      })
+      .finally(() => {
+        navigate(routeSellerCategories);
       });
   };
 
   const validateFormNew = () => {
-    const titleValidation = validateCategoryTitle(formCategoryInfo.title);
+    const titleValidation = validateVoucherTitle(form.title);
 
     setValidationMsg({
       ...validationMsg,
       title: titleValidation,
     });
 
-    if (titleValidation !== ''
-    ) return false;
-
-    return true;
+    return titleValidation === '';
   };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (validateFormNew()) {
-      submitNew();
-    }
+    if (validateFormNew()) submitNew();
   };
-
-  useEffect(() => {
-    setDocumentTitle('Buat Kategori Toko');
-  }, []);
 
   return (
     <div className="page-layout">
       <div>
-        <PageTitle text="Buat Kategori Toko" />
+        <PageTitle text="Buat Kategori Baru" />
         <PageBreadcrumb main="Produk" sub="Kategori Toko" />
       </div>
       <div>
         <form onSubmit={handleSubmit}>
           <div className="page-content">
-            <SectionTitle text="Kategori Toko Baru" />
-            <CategoryFormInfo
-              form={formCategoryInfo}
+            <SectionTitle text="Kategori Baru" />
+            <SellerCategoriesInfoForm
+              form={form}
               handleChange={handleChange}
-              handleSubmit={handleSubmit}
               validationMsg={validationMsg}
             />
           </div>
           <div className="page-content d-flex justify-content-end">
-            <SubmitButton text="Buat Kategori" />
+            <SubmitButton text="Buat Kategori Baru" />
           </div>
         </form>
       </div>

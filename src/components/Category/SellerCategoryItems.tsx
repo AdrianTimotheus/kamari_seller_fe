@@ -1,21 +1,21 @@
-/* eslint-disable */
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import '../../assets/style/category.css';
-import categoryData from '../../models/categoryData';
+import '../../assets/style/voucher.css';
 import { axiosPrivate } from '../../utils/API';
 import Toast from '../Interaction/Toast';
+import sellerCategoryItems from '../../models/sellerCategoryItems';
 
 type props = {
-  category: categoryData,
+    sellerCategoryItemsProps: sellerCategoryItems,
 }
-export default function CategoryItem({ category }:props) {
+export default function SellerCategoryItems({ sellerCategoryItemsProps }:props) {
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
+  const idParam = sellerCategoryItemsProps.id.toString();
+  console.log(idParam);
 
   const handleDelete = () => {
     Swal.fire({
-      text: 'Hapus category ini?',
+      text: 'Hapus kategori ini?',
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#E75B5B',
@@ -24,20 +24,21 @@ export default function CategoryItem({ category }:props) {
       cancelButtonText: 'Batal',
     }).then((result) => {
       if (result.isConfirmed) {
-        axiosPrivate.delete(`/sellers/categories/${category.id}`)
+        axiosPrivate.delete(`/sellers/categories/items/${idParam}`)
           .then((res) => {
             if (res.status === 200) {
               Toast.fire({
                 icon: 'success',
-                title: 'Kategori dihapus',
+                title: 'Produk dihapus dari kategori',
               });
               setIsDeleted(true);
             }
           })
           .catch((err) => {
+            console.log(err);
             Toast.fire({
               icon: 'error',
-              title: 'Gagal menghapus kategori',
+              title: 'Gagal menghapus produk dari kategori',
             });
             throw new Error(err);
           });
@@ -48,26 +49,22 @@ export default function CategoryItem({ category }:props) {
   if (isDeleted) return <div />;
 
   return (
-    <tr className="category-item">
+    <tr className="voucher">
       <td>
-        <span>{category.title}</span>
+        <span>{sellerCategoryItemsProps.name}</span>
       </td>
       <td>
-        <span>{category.product_count}</span>
+        <div className="promo-list__product">
+          <img alt="" src={sellerCategoryItemsProps.thumbnail_url} width="100px" height="100px" />
+        </div>
       </td>
       <td>
         <div>
-          <Link
-              to={`/category/${category.id}/edit`}
-              title="Edit"
-              className="icon-mini icon-mini-orange"
-            >
-              <i className="bi bi-pencil" />
-            </Link>
           <button
             type="button"
             title="Hapus"
             className="icon-mini icon-mini-red"
+            onClick={() => handleDelete()}
           >
             <i className="bi bi-trash2" />
           </button>

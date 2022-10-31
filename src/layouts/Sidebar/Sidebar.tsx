@@ -4,7 +4,6 @@ import { Dispatch, SetStateAction } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import KamariSeller from '../../assets/png/Kamari-Seller.png';
 import {
-  routeCategoryList,
   // routeCourier,
   routeDashboard,
   routeOrder,
@@ -12,7 +11,7 @@ import {
   routeProfile,
   routePromotionList,
   routeVoucherList,
-  routeWithdraw,
+  routeWithdraw, routeSellerCategories,
 } from '../../utils/RouteList';
 
 type props = {
@@ -62,7 +61,7 @@ export default function Sidebar({ showSidebar, setShowSidebar }:props) {
         },
         {
           text: 'Kategori Toko',
-          url: routeCategoryList,
+          url: routeSellerCategories,
         },
       ],
     },

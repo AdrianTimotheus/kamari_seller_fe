@@ -1,26 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FormEvent } from 'react';
 import TextInputWithCounter from '../../../components/Form/Custom/TextInputWithCounter';
 
 type props = {
   form: any,
   validationMsg: any,
   handleChange: Function,
-  handleSubmit: Function,
 }
 
-export default function CategoryFormInfo({
+export default function SellerCategoriesInfoForm({
   form,
   validationMsg,
   handleChange,
-  handleSubmit,
 }:props) {
-  const handleFormSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    handleSubmit();
-  };
   return (
-    <form onSubmit={handleFormSubmit}>
+    <div>
       <table className="table table-borderless m-0 w-100">
         <tbody>
           <tr>
@@ -45,6 +38,6 @@ export default function CategoryFormInfo({
           </tr>
         </tbody>
       </table>
-    </form>
+    </div>
   );
 }

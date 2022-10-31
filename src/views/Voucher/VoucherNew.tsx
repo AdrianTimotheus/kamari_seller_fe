@@ -115,12 +115,12 @@ export default function VoucherNew() {
     });
 
     if (titleValidation !== ''
-    || codeValidation !== ''
-    || promoTypeValidation !== ''
-    || stockValidation !== ''
-    || discountValidation !== ''
-    || startEndDateValidation !== ''
-    || minPaymentValidation !== ''
+        || codeValidation !== ''
+        || promoTypeValidation !== ''
+        || stockValidation !== ''
+        || discountValidation !== ''
+        || startEndDateValidation !== ''
+        || minPaymentValidation !== ''
     ) return false;
 
     return true;

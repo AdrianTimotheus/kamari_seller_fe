@@ -16,3 +16,7 @@ export const routePromotionList = '/promotion';
 export const routePromotionNew = '/promotion/new';
 
 export const routeWithdraw = '/withdraw';
+
+export const routeSellerCategories = '/seller-categories';
+export const routeSellerCategoriesNew = '/seller-categories/new';
+export const routeSellerCategoriesEdit = '/seller-categories/edit';

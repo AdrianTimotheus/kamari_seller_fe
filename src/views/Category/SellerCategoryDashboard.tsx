@@ -4,20 +4,19 @@ import { FormEvent, useEffect, useState } from 'react';
 import Toast from '../../components/Interaction/Toast';
 import PageBreadcrumb from '../../components/Text/PageBreadcrumb';
 import PageTitle from '../../components/Text/PageTitle';
-import CategoryList from '../../layouts/Category/CategoryList';
-import categoryData from '../../models/categoryData';
+import sellerCategoryData from '../../models/sellerCategoriesData';
 import { axiosPrivate } from '../../utils/API';
 import { setDocumentTitle } from '../../utils/Utils';
+import SellerCategoriesList from '../../layouts/Category/SellerCategoriesList';
 
-export default function CategoryDashboard() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [categories, setCategories] = useState<categoryData[]>([]);
+export default function SellerCategoryDashboard() {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [sellerCategories, setSellerCategories] = useState<sellerCategoryData[]>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [searchOpt, setSearchOpt] = useState({
     keyword: '',
     page: 1,
     limit: '10',
-    categoryStatus: '',
   });
 
   const changePage = (page: number) => {
@@ -31,25 +30,22 @@ export default function CategoryDashboard() {
     setSearchOpt({ ...searchOpt, [name]: value });
   };
 
-  useEffect(() => {
-    setSearchOpt({ ...searchOpt, page: 1 });
-  }, [searchOpt.categoryStatus]);
-
-  const getCategories = () => {
+  const getSellerCategories = () => {
     setIsLoading(true);
-    setCategories([]);
+    setSellerCategories([]);
     let url = `/sellers/categories?page=${searchOpt.page}&limit=${parseInt(searchOpt.limit, 10)}`;
     if (searchOpt.keyword !== '') url += `&keyword=${searchOpt.keyword}`;
-    if (searchOpt.categoryStatus !== '') url += `&categoryStatus=${searchOpt.categoryStatus}`;
+
     axiosPrivate.get(url)
       .then((res) => {
-        setCategories(res.data.categories);
-        setTotalPage(res.data.__metadata?.lastPage);
+        setSellerCategories(res.data.seller_categories);
+        setTotalPage(res.data.total_page);
+        console.log(res.data.total_page);
       })
       .catch((err) => {
         Toast.fire({
           icon: 'error',
-          title: 'Terdapat masalah koneksi',
+          title: 'There was a problem fetching data',
         });
         throw new Error(err);
       })
@@ -60,11 +56,18 @@ export default function CategoryDashboard() {
 
   useEffect(() => {
     setDocumentTitle('Kategori Toko');
-    getCategories();
+    getSellerCategories();
   }, [
     searchOpt.page,
+  ]);
+
+  useEffect(() => {
+    setDocumentTitle('Kategori Toko');
+    changePage(1);
+    getSellerCategories();
+  }, [
+    searchOpt.keyword,
     searchOpt.limit,
-    searchOpt.categoryStatus,
   ]);
 
   return (
@@ -74,14 +77,14 @@ export default function CategoryDashboard() {
         <PageBreadcrumb main="Produk" sub="Kategori Toko" />
       </div>
       <div>
-        <CategoryList
-          categories={categories}
+        <SellerCategoriesList
+          sellerCategories={sellerCategories}
           searchOpt={searchOpt}
           handleChange={handleChange}
           changePage={changePage}
           totalPage={totalPage}
           isLoading={isLoading}
-          getCategories={getCategories}
+          getSellerCategories={getSellerCategories}
         />
       </div>
     </div>

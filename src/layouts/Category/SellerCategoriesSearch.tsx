@@ -4,24 +4,23 @@ import SearchGroup from '../../components/Form/Custom/SearchGroup';
 type props = {
   searchOpt: any,
   handleChange: Function,
-  getCategories: Function,
+  getSellerCategories: Function,
 }
 
-export default function CategorySearch({
+export default function SellerCategoriesSearch({
   searchOpt,
   handleChange,
-  getCategories,
+  getSellerCategories,
 }:props) {
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    getCategories();
+  const handleSubmit = () => {
+    getSellerCategories();
   };
   return (
     <div className="my-4 d-flex flex-row flex-wrap justify-content-between align-items-center">
       <SearchGroup
         keyword={searchOpt.keyword}
         fieldName="keyword"
-        placeholder="Cari kategori toko"
+        placeholder="Cari kategori"
         handleChange={handleChange}
         handleSubmit={handleSubmit}
       />

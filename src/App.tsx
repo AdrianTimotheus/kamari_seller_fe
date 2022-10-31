@@ -14,8 +14,8 @@ import VoucherDetail from './views/Voucher/VoucherDetail';
 import VoucherEdit from './views/Voucher/VoucherEdit';
 import VoucherNew from './views/Voucher/VoucherNew';
 import {
-  routeCategoryList,
-  routeCategoryNew,
+  // routeCategoryList,
+  // routeCategoryNew,
   routeDashboard,
   routeOrder,
   routeProductList,
@@ -25,14 +25,14 @@ import {
   routePromotionNew,
   routeVoucherList,
   routeVoucherNew,
-  routeWithdraw,
+  routeWithdraw, routeSellerCategories, routeSellerCategoriesNew,
 } from './utils/RouteList';
 import WithdrawDashboard from './views/Finance/WithdrawDashboard';
 import PromotionDashboard from './views/Promotion/PromotionDashboard';
 import PromotionNew from './views/Promotion/PromotionNew';
 import PromotionDetail from './views/Promotion/PromotionDetail';
-import CategoryDashboard from './views/Category/CategoryDashboard';
-import CategoryNew from './views/Category/CategoryNew';
+// import CategoryDashboard from './views/Category/CategoryDashboard';
+import SellerCategories from './views/Category/SellerCategoryDashboard';
 import ProductEdit from './views/Product/ProductEdit';
 import ProductDetail from './views/Product/ProductDetail';
 import OrderDashboard from './views/Order/OrderDashboard';
@@ -41,6 +41,8 @@ import OrderDetail from './views/Order/OrderDetail';
 import NotFound from './views/NotFound';
 import Login from './views/Account/Login';
 import Logout from './views/Account/Logout';
+import SellerCategoryEdit from './views/Category/SellerCategoryEdit';
+import SellerCategoryNew from './views/Category/SellerCategoryNew';
 
 function App() {
   return (
@@ -63,8 +65,8 @@ function App() {
         <Route path={routeProductNew} element={<ProductNew />} />
         <Route path="/product/:productId" element={<ProductDetail />} />
         <Route path="/product/:productId/edit" element={<ProductEdit />} />
-        <Route path={routeCategoryList} element={<CategoryDashboard />} />
-        <Route path={routeCategoryNew} element={<CategoryNew />} />
+        {/* <Route path={routeCategoryList} element={<CategoryDashboard />} /> */}
+        {/* <Route path={routeCategoryNew} element={<CategoryNew />} /> */}
 
         {/* voucher and promotion */}
         <Route path={routeVoucherList} element={<VoucherDashboard />} />
@@ -79,6 +81,10 @@ function App() {
         {/* finance */}
         <Route path={routeWithdraw} element={<WithdrawDashboard />} />
 
+        {/* seller categories */}
+        <Route path={routeSellerCategories} element={<SellerCategories />} />
+        <Route path={routeSellerCategoriesNew} element={<SellerCategoryNew />} />
+        <Route path="categories/:sellerCategoriesId/edit" element={<SellerCategoryEdit />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
